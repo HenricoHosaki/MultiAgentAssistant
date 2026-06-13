@@ -1,0 +1,24 @@
+[project]
+name = "sac_assistant"
+version = "0.1.0"
+description = "sac_assistant using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[google-genai,tools]==1.14.7",
+]
+
+[project.scripts]
+sac_assistant = "sac_assistant.main:run"
+run_crew = "sac_assistant.main:run"
+train = "sac_assistant.main:train"
+replay = "sac_assistant.main:replay"
+test = "sac_assistant.main:test"
+run_with_trigger = "sac_assistant.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
