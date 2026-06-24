@@ -3275,11 +3275,15 @@ name = "sac-assistant"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "chromadb" },
     { name = "crewai", extra = ["google-genai", "tools"] },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "crewai", extras = ["google-genai", "tools"], specifier = "==1.14.7" }]
+requires-dist = [
+    { name = "chromadb", specifier = ">=1.1.1" },
+    { name = "crewai", extras = ["google-genai", "tools"], specifier = "==1.14.7" },
+]
 
 [[package]]
 name = "shellingham"
