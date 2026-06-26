@@ -14,8 +14,7 @@ def run():
     Run the crew.
     """
     inputs = {
-        'topic': 'AI LLMs',
-        'current_year': str(datetime.now().year)
+        'question': 'What is your return policy on international orders?'
     }
 
     try:

@@ -9,8 +9,9 @@ Multi-agent Customer Support (SAC) assistant — answers questions about
 
 - **Python 3.12** · **uv** (dependency management)
 - **CrewAI** (multi-agent orchestration)
-- **Gemini** (LLM, via LiteLLM)
-- _RAG (Chroma), FastAPI, and React — added in upcoming phases_
+- **Gemini** (LLM + embeddings, via LiteLLM)
+- **Chroma** (local vector store for RAG)
+- _FastAPI and React — added in upcoming phases_
 
 ## Prerequisites
 
@@ -57,8 +58,8 @@ cd sac_assistant
 crewai run
 ```
 
-Generates a `report.md` at the end. (In Phase 0 the content is the generic template; it
-will be customized for the SAC in the next phases.)
+Currently runs the `products_specialist` agent, answering a single hardcoded
+question (set in `main.py`) grounded in the Products knowledge base, with source citations.
 
 ## Project structure
 
@@ -69,13 +70,18 @@ MultiAgentAssistant/
 └── sac_assistant/              # CrewAI project
     ├── .env                    # secrets (not committed to git)
     ├── pyproject.toml          # dependencies + commands
-    ├── knowledge/              # RAG knowledge base (Phase 1)
+    ├── knowledge/              # RAG knowledge base (Phase 1: products/)
     └── src/sac_assistant/
         ├── main.py             # entry point (run/train/test)
         ├── crew.py             # assembles the Crew (Agents + Tasks + Process)
-        └── config/
-            ├── agents.yaml     # defines the agents
-            └── tasks.yaml      # defines the tasks
+        ├── config/
+        │   ├── agents.yaml     # defines the agents
+        │   └── tasks.yaml      # defines the tasks
+        ├── rag/
+        │   ├── ingest.py       # chunking + embeddings -> Chroma
+        │   └── retriever.py    # similarity search against Chroma
+        └── tools/
+            └── knowledge_search_tool.py  # CrewAI Tool wrapping the retriever
 ```
 
 ## Environment variables
@@ -95,4 +101,13 @@ MultiAgentAssistant/
 - [x] **Step 4** — `.env` configured; `.gitignore` already protects the `.env`
 - [x] **Step 5** — hello-crew validated with Gemini (`crewai run` generated `report.md`)
 
-**✅ Phase 0 complete** — CrewAI + Gemini working. Next: Phase 1 (single-agent RAG).
+**✅ Phase 0 complete** — CrewAI + Gemini working.
+
+- [x] **Step 1** — Products knowledge base written (`catalog.md`, `guarantee_and_devolution.md`, `usage_and_care.md`)
+- [x] **Step 2** — `ingest.py`: chunking by Markdown section + Gemini embeddings + Chroma storage
+- [x] **Step 3** — `retriever.py`: similarity search validated (correct chunk retrieved for a paraphrased question)
+- [x] **Step 4** — `ProductKnowledgeSearchTool` wrapping the retriever as a CrewAI Tool
+- [x] **Step 5** — `products_specialist` agent + `answer_product_question` task replacing the generic template
+- [x] **Step 6** — End-to-end validated via `crewai run`: tool calling works, answers cite sources, and the agent honestly declines out-of-scope questions instead of hallucinating
+
+**✅ Phase 1 complete** — single-agent RAG working end-to-end. Next: Phase 2 (Triage + multi-agent Flow for Deliveries and Payments).
