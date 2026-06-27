@@ -4,8 +4,20 @@ from pydantic import BaseModel, Field
 from sac_assistant.rag.retriever import retrieve
 
 
-class ProductKnowledgeSearchInput(BaseModel):
-    query: str = Field(..., description="The customer's question about products to search the knowledge base for.")
+class KnowledgeSearchInput(BaseModel):
+    query: str = Field(..., description="The customer's question to search the knowledge base for.")
+
+
+def _search(collection_name: str, query: str) -> str:
+    results = retrieve(query, collection_name=collection_name)
+    documents = results["documents"][0]
+    metadatas = results["metadatas"][0]
+
+    formatted = []
+    for doc, meta in zip(documents, metadatas):
+        formatted.append(f"Source: {meta['source']}\n{doc}")
+
+    return "\n\n---\n\n".join(formatted)
 
 
 class ProductKnowledgeSearchTool(BaseTool):
@@ -15,15 +27,33 @@ class ProductKnowledgeSearchTool(BaseTool):
         "for information relevant to a customer's question about products. "
         "Returns relevant excerpts along with their source document."
     )
-    args_schema: Type[BaseModel] = ProductKnowledgeSearchInput
+    args_schema: Type[BaseModel] = KnowledgeSearchInput
 
     def _run(self, query: str) -> str:
-        results = retrieve(query)
-        documents = results["documents"][0]
-        metadatas = results["metadatas"][0]
+        return _search("products", query)
 
-        formatted = []
-        for doc, meta in zip(documents, metadatas):
-            formatted.append(f"Source: {meta['source']}\n{doc}")
 
-        return "\n\n---\n\n".join(formatted)
+class DeliveryKnowledgeSearchTool(BaseTool):
+    name: str = "Delivery Knowledge Search"
+    description: str = (
+        "Searches the delivery knowledge base (shipping coverage, timeframes, tracking, free shipping) "
+        "for information relevant to a customer's question about deliveries. "
+        "Returns relevant excerpts along with their source document."
+    )
+    args_schema: Type[BaseModel] = KnowledgeSearchInput
+
+    def _run(self, query: str) -> str:
+        return _search("delivery", query)
+
+
+class PaymentKnowledgeSearchTool(BaseTool):
+    name: str = "Payment Knowledge Search"
+    description: str = (
+        "Searches the payment knowledge base (payment methods, installments, refund timelines) "
+        "for information relevant to a customer's question about payments. "
+        "Returns relevant excerpts along with their source document."
+    )
+    args_schema: Type[BaseModel] = KnowledgeSearchInput
+
+    def _run(self, query: str) -> str:
+        return _search("payments", query)

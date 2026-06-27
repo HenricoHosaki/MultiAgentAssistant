@@ -1,0 +1,9 @@
+answer_product_question:
+  description: >
+    A customer asked the following question: "{question}"
+    Use the Product Knowledge Search tool to find relevant information before answering.
+  expected_output: >
+    A clear, direct answer to the customer's question, grounded in the knowledge base,
+    citing the source document(s) used (e.g., "according to catalog.md").
+    If no relevant information is found, say so honestly instead of guessing.
+  agent: products_specialist

@@ -8,10 +8,11 @@ load_dotenv()
 
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 chroma_client = chromadb.PersistentClient(path=str(Path(__file__).parent / "chroma_db"))
-collection = chroma_client.get_or_create_collection(name="products")
 
 
-def retrieve(query: str, n_results: int = 3):
+def retrieve(query: str, collection_name: str, n_results: int = 3):
+    collection = chroma_client.get_or_create_collection(name=collection_name)
+
     result = client.models.embed_content(
         model="gemini-embedding-001",
         contents=query,
@@ -26,5 +27,5 @@ def retrieve(query: str, n_results: int = 3):
 
 
 if __name__ == "__main__":
-    resposta = retrieve("Is the backpack waterproof?")
+    resposta = retrieve("Is the backpack waterproof?", collection_name="products")
     print(resposta)

@@ -3,8 +3,8 @@ import sys
 import warnings
 
 from datetime import datetime
-
-from sac_assistant.crew import SacAssistant
+from sac_assistant.crews.products_crew.products_crew import ProductsCrew
+from sac_assistant.crews.delivery_crew.delivery_crew import DeliveryCrew
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
@@ -13,15 +13,8 @@ def run():
     """
     Run the crew.
     """
-    inputs = {
-        'question': 'What is your return policy on international orders?'
-    }
-
-    try:
-        SacAssistant().crew().kickoff(inputs=inputs)
-    except Exception as e:
-        raise Exception(f"An error occurred while running the crew: {e}")
-
+    inputs = {'question': 'What is the tracking process for my order?'}
+    DeliveryCrew().crew().kickoff(inputs=inputs)
 
 def train():
     """
@@ -32,7 +25,7 @@ def train():
         'current_year': str(datetime.now().year)
     }
     try:
-        SacAssistant().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+        ProductsCrew().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while training the crew: {e}")
@@ -42,7 +35,7 @@ def replay():
     Replay the crew execution from a specific task.
     """
     try:
-        SacAssistant().crew().replay(task_id=sys.argv[1])
+        ProductsCrew().crew().replay(task_id=sys.argv[1])
 
     except Exception as e:
         raise Exception(f"An error occurred while replaying the crew: {e}")
@@ -57,7 +50,7 @@ def test():
     }
 
     try:
-        SacAssistant().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
+        ProductsCrew().crew().test(n_iterations=int(sys.argv[1]), eval_llm=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while testing the crew: {e}")
@@ -83,7 +76,7 @@ def run_with_trigger():
     }
 
     try:
-        result = SacAssistant().crew().kickoff(inputs=inputs)
+        result = ProductsCrew().crew().kickoff(inputs=inputs)
         return result
     except Exception as e:
         raise Exception(f"An error occurred while running the crew with trigger: {e}")

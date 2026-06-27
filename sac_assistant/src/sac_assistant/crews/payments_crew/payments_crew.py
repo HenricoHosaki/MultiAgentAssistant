@@ -2,33 +2,32 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 
-from sac_assistant.tools.knowledge_search_tool import ProductKnowledgeSearchTool
+from sac_assistant.tools.knowledge_search_tool import PaymentKnowledgeSearchTool
 
 
 @CrewBase
-class SacAssistant():
-    """SacAssistant crew"""
+class PaymentsCrew():
+    """Payments specialist crew"""
 
     agents: list[BaseAgent]
     tasks: list[Task]
 
     @agent
-    def products_specialist(self) -> Agent:
+    def payment_specialist(self) -> Agent:
         return Agent(
-            config=self.agents_config['products_specialist'],  # type: ignore[index]
-            tools=[ProductKnowledgeSearchTool()],
+            config=self.agents_config['payment_specialist'],  # type: ignore[index]
+            tools=[PaymentKnowledgeSearchTool()],
             verbose=True
         )
 
     @task
-    def answer_product_question(self) -> Task:
+    def answer_payment_question(self) -> Task:
         return Task(
-            config=self.tasks_config['answer_product_question'],  # type: ignore[index]
+            config=self.tasks_config['answer_payment_question'],  # type: ignore[index]
         )
 
     @crew
     def crew(self) -> Crew:
-        """Creates the SacAssistant crew"""
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
