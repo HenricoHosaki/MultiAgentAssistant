@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from sac_assistant.crews.products_crew.products_crew import ProductsCrew
 from sac_assistant.crews.delivery_crew.delivery_crew import DeliveryCrew
 from sac_assistant.crews.payments_crew.payments_crew import PaymentsCrew
-
+from sac_assistant.guardrails.input_guardrail import check_input
 
 class TriageResult(BaseModel):
     intent: Literal["products", "delivery", "payments", "other"]
@@ -16,6 +16,8 @@ class TriageResult(BaseModel):
 
 class SacState(BaseModel):
     question: str = ""
+    blocked: bool = False
+    block_reason: str = ""
     intent: str = ""
     confidence: float = 0.0
     answer: str = ""
@@ -24,6 +26,23 @@ class SacState(BaseModel):
 class SacFlow(Flow[SacState]):
 
     @start()
+    def guardrail_check(self):
+        passed, reason = check_input(self.state.question)
+        self.state.blocked = not passed
+        self.state.block_reason = reason
+
+    @router(guardrail_check)
+    def route_guardrail(self):
+        return "blocked" if self.state.blocked else "allowed"
+
+    @listen("blocked")
+    def handle_blocked(self):
+        self.state.answer = (
+            "Não posso processar essa solicitação. Evite compartilhar dados sensíveis "
+            "como CPF ou número de cartão, e reformule sua pergunta."
+        )
+
+    @listen("allowed")
     def triage(self):
         triage_agent = Agent(
             role="Customer Question Triage Specialist",

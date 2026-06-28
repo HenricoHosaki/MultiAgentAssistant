@@ -15,7 +15,7 @@ def run():
     Run the flow.
     """
     flow = SacFlow()
-    flow.kickoff(inputs={"question": "What's the capital of France?"})
+    flow.kickoff(inputs = {"question": "What is the tracking process for my order?"})
     print(flow.state.answer)
 
 def train():

@@ -128,4 +128,11 @@ MultiAgentAssistant/
 - [x] **Step 5** — Triage agent added (direct `Agent.kickoff()` with structured `TriageResult` output, no Crew overhead)
 - [x] **Step 6** — `SacFlow` assembled: `@start` triage → `@router` → `@listen` per domain; validated end-to-end for Products, Delivery, Payments, and out-of-scope ("Other") questions — only the matching crew runs, no wasted LLM calls
 
-**✅ Phase 2 complete** — Triage + multi-agent Flow working end-to-end. Next: Phase 3 (mock tools for orders/invoices, input guardrails, escalation).
+**✅ Phase 2 complete** — Triage + multi-agent Flow working end-to-end.
+
+- [x] **Step 1** — Input guardrail (`guardrails/input_guardrail.py`): regex-based detection of PII (CPF, credit card) and prompt-injection patterns, validated for both cases plus a normal question passing through untouched
+- [x] **Step 2** — `SacFlow` reorganized: `@start guardrail_check` → `@router` → `"blocked"` (refusal, no LLM call) or `"allowed"` (continues into the existing triage → router → specialist chain)
+- [ ] **Step 3** — Mock tools (`consulta_pedido()`, `consulta_fatura()`) for the Delivery and Payments specialists
+- [ ] **Step 4** — Escalation: combine Triage `confidence` (kept internal, never shown to the customer) with a structured "did the specialist actually find an answer" signal from the specialist task, to decide handoff to `abrir_ticket()` (mock)
+
+**🚧 Phase 3 in progress** — guardrail done; mock tools and escalation next.
