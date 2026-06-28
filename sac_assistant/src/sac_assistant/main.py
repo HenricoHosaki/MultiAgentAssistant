@@ -5,16 +5,18 @@ import warnings
 from datetime import datetime
 from sac_assistant.crews.products_crew.products_crew import ProductsCrew
 from sac_assistant.crews.delivery_crew.delivery_crew import DeliveryCrew
+from sac_assistant.flow import SacFlow
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 
 def run():
     """
-    Run the crew.
+    Run the flow.
     """
-    inputs = {'question': 'What is the tracking process for my order?'}
-    DeliveryCrew().crew().kickoff(inputs=inputs)
+    flow = SacFlow()
+    flow.kickoff(inputs={"question": "What's the capital of France?"})
+    print(flow.state.answer)
 
 def train():
     """

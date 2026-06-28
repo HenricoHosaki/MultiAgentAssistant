@@ -181,6 +181,7 @@ Cada fase é um marco testável de forma independente.
 
 | Tópico | Quando decidir |
 |---|---|
+| `SacFlow.state.confidence` já existe (vem do Triage) mas não é usado ainda — vira a condição de escalonamento ("se confidence baixa, escalar em vez de inventar") | Fase 3 |
 | Fonte real dos dados de pedidos/pagamentos (API real vs mock) | Fase 3 |
 | UI: Streamlit (MVP rápido) vs React desde já | Início da Fase 4 |
 | Ferramenta de observabilidade (AgentOps vs Langtrace) | Fase 5 |

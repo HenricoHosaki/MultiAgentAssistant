@@ -58,8 +58,11 @@ cd sac_assistant
 crewai run
 ```
 
-Currently runs the `products_specialist` agent, answering a single hardcoded
-question (set in `main.py`) grounded in the Products knowledge base, with source citations.
+Currently runs the `SacFlow`: a Triage agent classifies a single hardcoded
+question (set in `main.py`) into Products, Delivery, Payments, or Other, then
+routes to the matching specialist crew, grounded in that domain's knowledge
+base, with source citations. Out-of-scope questions are declined instead of
+routed to a specialist.
 
 ## Project structure
 
@@ -70,18 +73,24 @@ MultiAgentAssistant/
 └── sac_assistant/              # CrewAI project
     ├── .env                    # secrets (not committed to git)
     ├── pyproject.toml          # dependencies + commands
-    ├── knowledge/              # RAG knowledge base (Phase 1: products/)
+    ├── knowledge/              # RAG knowledge base
+    │   ├── products/           # catalog, warranty, usage & care
+    │   ├── delivery/           # shipping, tracking, timeframes
+    │   └── payments/           # payment methods, refunds
     └── src/sac_assistant/
         ├── main.py             # entry point (run/train/test)
-        ├── crew.py             # assembles the Crew (Agents + Tasks + Process)
-        ├── config/
-        │   ├── agents.yaml     # defines the agents
-        │   └── tasks.yaml      # defines the tasks
+        ├── flow.py             # SacFlow: Triage -> router -> specialist crew
+        ├── crews/              # one isolated crew per domain
+        │   ├── products_crew/
+        │   │   ├── config/agents.yaml, tasks.yaml
+        │   │   └── products_crew.py
+        │   ├── delivery_crew/  (same layout)
+        │   └── payments_crew/  (same layout)
         ├── rag/
-        │   ├── ingest.py       # chunking + embeddings -> Chroma
-        │   └── retriever.py    # similarity search against Chroma
+        │   ├── ingest.py       # chunking + embeddings -> Chroma (per-domain collection)
+        │   └── retriever.py    # similarity search against Chroma (per-domain collection)
         └── tools/
-            └── knowledge_search_tool.py  # CrewAI Tool wrapping the retriever
+            └── knowledge_search_tool.py  # one CrewAI Tool per domain, wraps the retriever
 ```
 
 ## Environment variables
@@ -110,4 +119,13 @@ MultiAgentAssistant/
 - [x] **Step 5** — `products_specialist` agent + `answer_product_question` task replacing the generic template
 - [x] **Step 6** — End-to-end validated via `crewai run`: tool calling works, answers cite sources, and the agent honestly declines out-of-scope questions instead of hallucinating
 
-**✅ Phase 1 complete** — single-agent RAG working end-to-end. Next: Phase 2 (Triage + multi-agent Flow for Deliveries and Payments).
+**✅ Phase 1 complete** — single-agent RAG working end-to-end.
+
+- [x] **Step 1** — Delivery and Payments knowledge bases written (`shipping_and_tracking.md`, `payment_and_refunds.md`); Products catalog expanded to 9 items across multiple brands
+- [x] **Step 2** — `ingest.py`/`retriever.py` generalized to take a `collection_name`, one Chroma collection per domain (Products, Delivery, Payments)
+- [x] **Step 3** — `DeliveryKnowledgeSearchTool` and `PaymentKnowledgeSearchTool` added alongside the existing Product tool
+- [x] **Step 4** — Crew split into 3 isolated single-agent crews (`ProductsCrew`, `DeliveryCrew`, `PaymentsCrew`), each with its own `agents.yaml`/`tasks.yaml`
+- [x] **Step 5** — Triage agent added (direct `Agent.kickoff()` with structured `TriageResult` output, no Crew overhead)
+- [x] **Step 6** — `SacFlow` assembled: `@start` triage → `@router` → `@listen` per domain; validated end-to-end for Products, Delivery, Payments, and out-of-scope ("Other") questions — only the matching crew runs, no wasted LLM calls
+
+**✅ Phase 2 complete** — Triage + multi-agent Flow working end-to-end. Next: Phase 3 (mock tools for orders/invoices, input guardrails, escalation).
