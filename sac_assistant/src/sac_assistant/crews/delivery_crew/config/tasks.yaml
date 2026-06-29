@@ -5,10 +5,12 @@ answer_delivery_question:
     use the Delivery Knowledge Search tool. If the question asks about the status of a
     specific order and mentions an order number, use the Order Lookup tool instead.
   expected_output: >
-    A clear, direct answer to the customer's question. If you used the knowledge base,
-    cite the source document (e.g., "according to shipping_and_tracking.md"). If you used
-    the Order Lookup tool, state the order status, tracking code, and estimated delivery
-    directly. Set found_answer to true if you found relevant grounded information, or
-    false if you could not find anything relevant and are honestly saying so instead of
-    guessing.
+    A clear, direct answer to the customer's question, WITHOUT mentioning the source
+    document or tool inside the answer text itself. If you used the knowledge base,
+    separately set the source field to the document name used (e.g.,
+    "shipping_and_tracking.md"). If you used the Order Lookup tool, state the order
+    status, tracking code, and estimated delivery directly, and set source to
+    "Order Lookup". Set found_answer to true if you found relevant grounded information,
+    or false (leaving source empty) if you could not find anything relevant and are
+    honestly saying so instead of guessing.
   agent: delivery_specialist

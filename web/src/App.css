@@ -1,0 +1,129 @@
+.chat-container {
+  max-width: 640px;
+  margin: 2rem auto;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #e5e5e5;
+}
+
+.chat-container h1 {
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 320px;
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.message-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.source-row {
+  margin-bottom: -0.5rem;
+}
+
+.avatar-spacer {
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.source-chip {
+  font-size: 0.7rem;
+  color: #777;
+  font-style: italic;
+}
+
+.message-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.message-row.user {
+  justify-content: flex-end;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2a2a2a;
+  font-size: 0.9rem;
+}
+
+.message-bubble {
+  max-width: 75%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 16px;
+  animation: fade-in 0.2s ease-out;
+}
+
+.message-row.user .message-bubble {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message-row.assistant .message-bubble {
+  background: #232323;
+  color: #f0f0f0;
+  border-bottom-left-radius: 4px;
+}
+
+.message-bubble p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: white;
+}
+
+.input-row input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.input-row button {
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.input-row button:hover {
+  background: #1d4ed8;
+}

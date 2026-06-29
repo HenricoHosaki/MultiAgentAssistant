@@ -22,6 +22,7 @@ class SacState(BaseModel):
     intent: str = ""
     confidence: float = 0.0
     found_answer: bool = True
+    source: str = ""
     answer: str = ""
 
 
@@ -71,18 +72,21 @@ class SacFlow(Flow[SacState]):
         result = ProductsCrew().crew().kickoff(inputs={"question": self.state.question})
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
+        self.state.source = result.pydantic.source
 
     @listen("delivery")
     def handle_delivery(self):
         result = DeliveryCrew().crew().kickoff(inputs={"question": self.state.question})
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
+        self.state.source = result.pydantic.source
 
     @listen("payments")
     def handle_payments(self):
         result = PaymentsCrew().crew().kickoff(inputs={"question": self.state.question})
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
+        self.state.source = result.pydantic.source
 
     @listen("other")
     def handle_other(self):

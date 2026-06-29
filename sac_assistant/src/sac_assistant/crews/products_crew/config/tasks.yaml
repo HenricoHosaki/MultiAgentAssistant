@@ -4,8 +4,10 @@ answer_product_question:
     Use the Product Knowledge Search tool to find relevant information before answering.
   expected_output: >
     A clear, direct answer to the customer's question, grounded in the knowledge base,
-    citing the source document(s) used (e.g., "according to catalog.md").
-    If no relevant information is found, say so honestly instead of guessing.
-    Set found_answer to true if you found relevant grounded information, or false if
-    you could not find anything relevant and are honestly saying so instead of guessing.
+    WITHOUT mentioning the source document inside the answer text itself. Separately,
+    set the source field to the name of the document you used (e.g., "catalog.md").
+    If no relevant information is found, say so honestly instead of guessing, and leave
+    source empty. Set found_answer to true if you found relevant grounded information,
+    or false if you could not find anything relevant and are honestly saying so instead
+    of guessing.
   agent: products_specialist
