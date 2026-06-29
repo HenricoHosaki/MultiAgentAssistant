@@ -3,6 +3,7 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 
 from sac_assistant.tools.knowledge_search_tool import ProductKnowledgeSearchTool
+from sac_assistant.schemas.specialist_answer import SpecialistAnswer
 
 
 @CrewBase
@@ -24,6 +25,7 @@ class ProductsCrew():
     def answer_product_question(self) -> Task:
         return Task(
             config=self.tasks_config['answer_product_question'],  # type: ignore[index]
+            output_pydantic=SpecialistAnswer,
         )
 
     @crew

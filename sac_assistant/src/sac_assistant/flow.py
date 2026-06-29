@@ -1,13 +1,14 @@
 from typing import Literal
 
 from crewai import Agent
-from crewai.flow.flow import Flow, listen, router, start
+from crewai.flow.flow import Flow, listen, or_, router, start
 from pydantic import BaseModel
 
 from sac_assistant.crews.products_crew.products_crew import ProductsCrew
 from sac_assistant.crews.delivery_crew.delivery_crew import DeliveryCrew
 from sac_assistant.crews.payments_crew.payments_crew import PaymentsCrew
 from sac_assistant.guardrails.input_guardrail import check_input
+from sac_assistant.tools.ticket_tool import open_ticket
 
 class TriageResult(BaseModel):
     intent: Literal["products", "delivery", "payments", "other"]
@@ -20,6 +21,7 @@ class SacState(BaseModel):
     block_reason: str = ""
     intent: str = ""
     confidence: float = 0.0
+    found_answer: bool = True
     answer: str = ""
 
 
@@ -67,20 +69,36 @@ class SacFlow(Flow[SacState]):
     @listen("products")
     def handle_products(self):
         result = ProductsCrew().crew().kickoff(inputs={"question": self.state.question})
-        self.state.answer = result.raw
+        self.state.answer = result.pydantic.answer
+        self.state.found_answer = result.pydantic.found_answer
 
     @listen("delivery")
     def handle_delivery(self):
         result = DeliveryCrew().crew().kickoff(inputs={"question": self.state.question})
-        self.state.answer = result.raw
+        self.state.answer = result.pydantic.answer
+        self.state.found_answer = result.pydantic.found_answer
 
     @listen("payments")
     def handle_payments(self):
         result = PaymentsCrew().crew().kickoff(inputs={"question": self.state.question})
-        self.state.answer = result.raw
+        self.state.answer = result.pydantic.answer
+        self.state.found_answer = result.pydantic.found_answer
 
     @listen("other")
     def handle_other(self):
         self.state.answer = (
             "I'm sorry, I can only help with questions about products, delivery, or payments."
         )
+
+    @listen(or_(handle_products, handle_delivery, handle_payments))
+    def check_escalation(self):
+        low_confidence = self.state.confidence < 0.6
+        no_answer = not self.state.found_answer
+
+        if low_confidence or no_answer:
+            reason = "low_confidence" if low_confidence else "no_answer_found"
+            open_ticket(self.state.question, reason=reason)
+            self.state.answer = (
+                "I wasn't able to fully resolve your question, so I've forwarded it to "
+                "a human agent who will follow up with you shortly."
+            )

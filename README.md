@@ -132,7 +132,7 @@ MultiAgentAssistant/
 
 - [x] **Step 1** — Input guardrail (`guardrails/input_guardrail.py`): regex-based detection of PII (CPF, credit card) and prompt-injection patterns, validated for both cases plus a normal question passing through untouched
 - [x] **Step 2** — `SacFlow` reorganized: `@start guardrail_check` → `@router` → `"blocked"` (refusal, no LLM call) or `"allowed"` (continues into the existing triage → router → specialist chain)
-- [ ] **Step 3** — Mock tools (`consulta_pedido()`, `consulta_fatura()`) for the Delivery and Payments specialists
-- [ ] **Step 4** — Escalation: combine Triage `confidence` (kept internal, never shown to the customer) with a structured "did the specialist actually find an answer" signal from the specialist task, to decide handoff to `abrir_ticket()` (mock)
+- [x] **Step 3** — Mock tools added: `OrderLookupTool` (Delivery) and `InvoiceLookupTool` (Payments); validated that the agent correctly picks the lookup tool for a specific order/invoice number vs. the knowledge-search tool for general policy questions, and honestly reports "not found" instead of guessing a status
+- [x] **Step 4** — Escalation: `SpecialistAnswer` (Pydantic `output_pydantic`) added to all 3 specialist tasks with an internal `found_answer` flag; `check_escalation` listens to all 3 specialists (`or_`) and overrides the answer with a handoff message + opens a mock ticket (`open_ticket()`) whenever Triage `confidence < 0.6` OR `found_answer` is `false`. Validated end-to-end: a question with no grounded answer in any knowledge base correctly triggered the ticket and the handoff message, with `confidence`/`found_answer` never exposed to the customer.
 
-**🚧 Phase 3 in progress** — guardrail done; mock tools and escalation next.
+**✅ Phase 3 complete** — guardrail, mock tools, and escalation all working end-to-end. Next: Phase 4 (FastAPI `/chat` endpoint + web chat UI).

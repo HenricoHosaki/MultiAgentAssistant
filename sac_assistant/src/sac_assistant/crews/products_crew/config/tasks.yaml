@@ -6,4 +6,6 @@ answer_product_question:
     A clear, direct answer to the customer's question, grounded in the knowledge base,
     citing the source document(s) used (e.g., "according to catalog.md").
     If no relevant information is found, say so honestly instead of guessing.
+    Set found_answer to true if you found relevant grounded information, or false if
+    you could not find anything relevant and are honestly saying so instead of guessing.
   agent: products_specialist

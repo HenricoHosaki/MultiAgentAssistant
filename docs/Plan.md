@@ -181,8 +181,8 @@ Cada fase é um marco testável de forma independente.
 
 | Tópico | Quando decidir |
 |---|---|
-| `SacFlow.state.confidence` já existe (vem do Triage) mas não é usado ainda — vira a condição de escalonamento ("se confidence baixa, escalar em vez de inventar") | Fase 3 |
 | Fonte real dos dados de pedidos/pagamentos (API real vs mock) | Fase 3 |
+| Flow não trata falha de chamada à API (ex: 429 de cota excedida do Gemini) como caso de escalonamento — hoje uma falha de API crasha o Flow inteiro, em vez de cair no mesmo fluxo de "não consegui resolver, abrindo ticket" usado para `found_answer=false` | Fase 6 (hardening) |
 | UI: Streamlit (MVP rápido) vs React desde já | Início da Fase 4 |
 | Ferramenta de observabilidade (AgentOps vs Langtrace) | Fase 5 |
 | Persistência de conversas / memória de longo prazo | Fase 5–6 |

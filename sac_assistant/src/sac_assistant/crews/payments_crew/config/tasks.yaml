@@ -1,9 +1,14 @@
 answer_payment_question:
   description: >
     A customer asked the following question: "{question}"
-    Use the Payment Knowledge Search tool to find relevant information before answering.
+    If the question is about general payment methods, installments, or refund policies,
+    use the Payment Knowledge Search tool. If the question asks about the status of a
+    specific invoice and mentions an invoice number, use the Invoice Lookup tool instead.
   expected_output: >
-    A clear, direct answer to the customer's question, grounded in the knowledge base,
-    citing the source document(s) used (e.g., "according to payment_and_refunds.md").
+    A clear, direct answer to the customer's question. If you used the knowledge base,
+    cite the source document (e.g., "according to payment_and_refunds.md"). If you used
+    the Invoice Lookup tool, state the invoice status, payment method, and amount directly.
     If no relevant information is found, say so honestly instead of guessing.
+    Set found_answer to true if you found relevant grounded information, or false if
+    you could not find anything relevant and are honestly saying so instead of guessing.
   agent: payment_specialist
