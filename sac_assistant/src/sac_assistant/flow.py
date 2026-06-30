@@ -24,6 +24,7 @@ class SacState(BaseModel):
     found_answer: bool = True
     source: str = ""
     answer: str = ""
+    outcome: str = ""
     system_error: bool = False
     prompt_tokens: int = 0
     completion_tokens: int = 0
@@ -56,6 +57,7 @@ class SacFlow(Flow[SacState]):
 
     @listen("blocked")
     def handle_blocked(self):
+        self.state.outcome = "blocked"
         self.state.answer = (
             "Não posso processar essa solicitação. Evite compartilhar dados sensíveis "
             "como CPF ou número de cartão, e reformule sua pergunta."
@@ -101,6 +103,7 @@ class SacFlow(Flow[SacState]):
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
         self.state.source = result.pydantic.source
+        self.state.outcome = "answered"
         self._add_usage(result.token_usage)
 
     @listen("delivery")
@@ -114,6 +117,7 @@ class SacFlow(Flow[SacState]):
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
         self.state.source = result.pydantic.source
+        self.state.outcome = "answered"
         self._add_usage(result.token_usage)
 
     @listen("payments")
@@ -127,18 +131,21 @@ class SacFlow(Flow[SacState]):
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
         self.state.source = result.pydantic.source
+        self.state.outcome = "answered"
         self._add_usage(result.token_usage)
 
     @listen("other")
     def handle_other(self):
         if self.state.system_error:
             open_ticket(self.state.question, reason="system_error")
+            self.state.outcome = "escalated"
             self.state.answer = (
                 "We're experiencing a technical issue right now, so I've forwarded your "
                 "question to a human agent who will follow up with you shortly."
             )
             return
 
+        self.state.outcome = "refused"
         self.state.answer = (
             "I'm sorry, I can only help with questions about products, delivery, or payments."
         )
@@ -156,6 +163,7 @@ class SacFlow(Flow[SacState]):
             else:
                 reason = "no_answer_found"
             open_ticket(self.state.question, reason=reason)
+            self.state.outcome = "escalated"
             self.state.answer = (
                 "I wasn't able to fully resolve your question, so I've forwarded it to "
                 "a human agent who will follow up with you shortly."

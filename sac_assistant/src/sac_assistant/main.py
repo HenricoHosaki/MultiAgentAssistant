@@ -2,9 +2,7 @@
 import sys
 import warnings
 
-from datetime import datetime
 from sac_assistant.crews.products_crew.products_crew import ProductsCrew
-from sac_assistant.crews.delivery_crew.delivery_crew import DeliveryCrew
 from sac_assistant.flow import SacFlow
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
@@ -23,8 +21,7 @@ def train():
     Train the crew for a given number of iterations.
     """
     inputs = {
-        "topic": "AI LLMs",
-        'current_year': str(datetime.now().year)
+        "question": "Is the backpack waterproof?"
     }
     try:
         ProductsCrew().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
@@ -47,8 +44,7 @@ def test():
     Test the crew execution and returns the results.
     """
     inputs = {
-        "topic": "AI LLMs",
-        "current_year": str(datetime.now().year)
+        "question": "Is the backpack waterproof?"
     }
 
     try:
@@ -73,8 +69,7 @@ def run_with_trigger():
 
     inputs = {
         "crewai_trigger_payload": trigger_payload,
-        "topic": "",
-        "current_year": ""
+        "question": ""
     }
 
     try:

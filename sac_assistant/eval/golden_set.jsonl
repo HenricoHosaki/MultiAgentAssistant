@@ -1,19 +1,19 @@
-{"question": "What is the polling rate of the Corsair K70 RGB Pro keyboard?", "domain": "products"}
-{"question": "Which mouse has the highest max DPI in your catalog?", "domain": "products"}
-{"question": "Can I use the Razer BlackShark V2 Pro headset on PlayStation 5?", "domain": "products"}
-{"question": "What's the weight capacity of the ThunderX3 EC3 gaming chair?", "domain": "products"}
-{"question": "Compare the LG UltraGear 27GP850 and Samsung Odyssey G5 monitors.", "domain": "products"}
-{"question": "Do you offer a loyalty rewards program with points?", "domain": "products"}
-{"question": "What happens if I miss all delivery attempts on my order?", "domain": "delivery"}
-{"question": "Do you ship to PO boxes?", "domain": "delivery"}
-{"question": "What's the minimum order value for free shipping?", "domain": "delivery"}
-{"question": "Who pays for re-shipping if I entered the wrong address myself?", "domain": "delivery"}
-{"question": "What's your delivery policy for international orders?", "domain": "delivery"}
-{"question": "How long does a Pix refund take?", "domain": "payments"}
-{"question": "What happens if my card payment fails?", "domain": "payments"}
-{"question": "Do you support recurring or subscription payments?", "domain": "payments"}
-{"question": "Will I be charged extra for using a foreign credit card?", "domain": "payments"}
-{"question": "What payment methods do you accept?", "domain": "payments"}
-{"question": "What's the capital of France?", "domain": "other"}
-{"question": "Can you tell me a joke?", "domain": "other"}
-{"question": "I'm not happy with my experience, I want to talk to someone.", "domain": "other"}
+{"question": "What is the polling rate of the Corsair K70 RGB Pro keyboard?", "domain": "products", "expected_behavior": "answer", "ground_truth": "The Corsair K70 RGB Pro has a polling rate of 8000 Hz."}
+{"question": "Which mouse has the highest max DPI in your catalog?", "domain": "products", "expected_behavior": "answer", "ground_truth": "The Razer DeathAdder V3 has the highest max DPI in the catalog, at 30,000 DPI."}
+{"question": "Can I use the Razer BlackShark V2 Pro headset on PlayStation 5?", "domain": "products", "expected_behavior": "answer", "ground_truth": "Yes, the Razer BlackShark V2 Pro works on PlayStation 5 via the included 3.5mm cable for basic audio, but its wireless 2.4 GHz dongle and THX Spatial Audio are PC-only features."}
+{"question": "What's the weight capacity of the ThunderX3 EC3 gaming chair?", "domain": "products", "expected_behavior": "answer", "ground_truth": "The ThunderX3 EC3 gaming chair has a weight capacity of up to 130 kg."}
+{"question": "Compare the LG UltraGear 27GP850 and Samsung Odyssey G5 monitors.", "domain": "products", "expected_behavior": "answer", "ground_truth": "The LG UltraGear 27GP850 has a higher refresh rate (165Hz vs 144Hz) and is NVIDIA G-SYNC certified, making it better for NVIDIA GPU owners. The Samsung Odyssey G5 has a 1000R curved panel, costs less, tops out at 144Hz, and supports FreeSync only."}
+{"question": "Do you offer a loyalty rewards program with points?", "domain": "products", "expected_behavior": "escalate"}
+{"question": "What happens if I miss all delivery attempts on my order?", "domain": "delivery", "expected_behavior": "answer", "ground_truth": "After 3 failed delivery attempts, the package is held at the local distribution center for 7 calendar days. If not picked up in that window, it is returned to the warehouse and the customer is contacted to arrange a new delivery (a new shipping fee may apply) or a refund."}
+{"question": "Do you ship to PO boxes?", "domain": "delivery", "expected_behavior": "answer", "ground_truth": "No, we do not ship to PO boxes. We do deliver to apartment lockers or concierge services for standard-sized packages."}
+{"question": "What's the minimum order value for free shipping?", "domain": "delivery", "expected_behavior": "answer", "ground_truth": "Orders of R$25 or more qualify for free shipping. Orders below R$25 are charged a shipping fee calculated at checkout based on destination and weight."}
+{"question": "Who pays for re-shipping if I entered the wrong address myself?", "domain": "delivery", "expected_behavior": "answer", "ground_truth": "If the address error was provided by the customer, the customer pays for re-shipping. If the error originated from our system, re-shipping is free."}
+{"question": "What's your delivery policy for international orders?", "domain": "delivery", "expected_behavior": "answer", "ground_truth": "International orders take 15-30 business days from order confirmation depending on destination and customs clearance, and are available to most countries subject to local customs regulations. Customs delays are outside our control."}
+{"question": "How long does a Pix refund take?", "domain": "payments", "expected_behavior": "answer", "ground_truth": "A Pix refund is processed within up to 3 calendar days."}
+{"question": "What happens if my card payment fails?", "domain": "payments", "expected_behavior": "answer", "ground_truth": "If a card payment fails, the order is held in 'pending payment' status for 24 hours so you can retry with the same or a different method. After 24 hours without a successful payment, the order is automatically cancelled and the reserved stock is released."}
+{"question": "Do you support recurring or subscription payments?", "domain": "payments", "expected_behavior": "answer", "ground_truth": "No, all purchases are one-time payments. Recurring or subscription billing is not offered."}
+{"question": "Will I be charged extra for using a foreign credit card?", "domain": "payments", "expected_behavior": "answer", "ground_truth": "Possibly. An international transaction fee may be charged by your card issuer or bank, but it is not set or collected by us."}
+{"question": "What payment methods do you accept?", "domain": "payments", "expected_behavior": "answer", "ground_truth": "We accept credit card, debit card, Pix, and Boleto (bank slip)."}
+{"question": "What's the capital of France?", "domain": "other", "expected_behavior": "refuse"}
+{"question": "Can you tell me a joke?", "domain": "other", "expected_behavior": "refuse"}
+{"question": "I'm not happy with my experience, I want to talk to someone.", "domain": "other", "expected_behavior": "escalate"}
