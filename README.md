@@ -9,7 +9,8 @@ Multi-agent Customer Support (SAC) assistant — answers questions about
 
 - **Python 3.12** · **uv** (dependency management)
 - **CrewAI** (multi-agent orchestration)
-- **Gemini** (LLM + embeddings, via LiteLLM)
+- **Cerebras** (chat/reasoning LLM, via LiteLLM — swappable; started on Gemini, see note below)
+- **Gemini** (embeddings only, for RAG — unrelated to the chat LLM)
 - **Chroma** (local vector store for RAG)
 - **FastAPI** + **Uvicorn** (backend API)
 - **React** + **Vite** (web chat UI)
@@ -136,8 +137,18 @@ MultiAgentAssistant/
 
 | Variable | Description |
 |---|---|
-| `GEMINI_API_KEY` | Gemini API key — **never commit** (stays only in `.env`) |
-| `MODEL` | Model used (e.g., `gemini/gemini-2.5-flash`) |
+| `GEMINI_API_KEY` | Gemini API key — **only used for RAG embeddings** (`rag/ingest.py`/`retriever.py`), independent of the chat LLM. **Never commit** (stays only in `.env`) |
+| `MODEL` | Chat/reasoning LLM used by Triage and the specialists (e.g., `cerebras/gpt-oss-120b`). Swappable thanks to LiteLLM — see note below |
+| `CEREBRAS_API_KEY` | Required if `MODEL` points to a `cerebras/...` model |
+
+> **Why Cerebras instead of Gemini for chat**: the project started on `gemini/gemini-2.5-flash`
+> for everything, but its free tier is capped at 20 requests/day, which kept getting exhausted
+> during manual testing. Cerebras's free tier is far more generous, and — important detail — it's
+> one of the few providers crewai treats as "native" (the others tried, like `groq/...`, hit a real
+> crewai bug where an internal prompt-caching marker leaks into the request and gets rejected by
+> providers without native support). Embeddings stayed on Gemini since switching them would have
+> required rewriting `rag/ingest.py`/`retriever.py`, and Anthropic/Groq/Cerebras don't offer an
+> embeddings API of their own anyway.
 
 ---
 
@@ -181,3 +192,14 @@ MultiAgentAssistant/
 - [x] **Step 3** — Polish: `SpecialistAnswer` extended with a `source` field (kept separate from the answer text, instead of the agent citing it inline); UI redesigned with avatar bubbles, fade-in animation, and a "📄 Leu `<file>`" / "🔧 Consultei `<tool>`" chip rendered above the bubble (aligned to it, not the page); the `intent` badge was removed from the bubble since it added no value for the end customer
 
 **✅ Phase 4 complete** — FastAPI backend + React chat UI working end-to-end, citations shown as a separate chip instead of inline text.
+
+- [x] **Knowledge base expansion** — Products knowledge restructured from a single `catalog.md`
+  into 12 per-category files (`keyboards.md`, `mice.md`, `headsets.md`, `webcams.md`,
+  `backpacks.md`, `mousepads.md`, `monitors.md`, `chairs.md`, `controllers.md`,
+  `usb_hubs.md`, `chargers.md`, `ssds.md`), 23 products total, each with deeper specs,
+  a per-category Compatibility section, and a per-category FAQ; plus two new cross-cutting
+  documents, `model_comparisons.md` and `compatibility_faq.md`. Delivery and Payments each
+  got a `specific_*_cases.md` (edge cases: failed delivery attempts, duplicate charges,
+  chargebacks, etc.) and a dedicated `*_faq.md`. No code changes were needed — `ingest.py`
+  already globs any `.md` file in the domain folder. Re-ingested: Products 81 chunks,
+  Delivery 15 chunks, Payments 14 chunks (up from ~9, ~5, ~5 before).
