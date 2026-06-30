@@ -181,12 +181,15 @@ Cada fase é um marco testável de forma independente.
 
 | Tópico | Quando decidir |
 |---|---|
-| Fonte real dos dados de pedidos/pagamentos (API real vs mock) | Fase 3 |
-| Flow não trata falha de chamada à API (ex: 429 de cota excedida do Gemini) como caso de escalonamento — hoje uma falha de API crasha o Flow inteiro, em vez de cair no mesmo fluxo de "não consegui resolver, abrindo ticket" usado para `found_answer=false` | Fase 6 (hardening) |
-| UI: Streamlit (MVP rápido) vs React desde já | Início da Fase 4 |
-| Ferramenta de observabilidade (AgentOps vs Langtrace) | Fase 5 |
-| Persistência de conversas / memória de longo prazo | Fase 5–6 |
-| Multi-tenant / autenticação do cliente | Fase 6 |
+| Fonte real dos dados de pedidos/pagamentos (API real vs mock) | Fase 3 — **resolvido**: continuam mock (`OrderLookupTool`/`InvoiceLookupTool`), API real fora de escopo |
+| ~~Flow não trata falha de chamada à API como caso de escalonamento~~ | **Resolvido na Fase 6** — `try/except` em `triage` e nos 3 `handle_*`, cai no mesmo fluxo de escalonamento com motivo `system_error` |
+| UI: Streamlit (MVP rápido) vs React desde já | Fase 4 — **resolvido**: React + Vite |
+| Ferramenta de observabilidade (AgentOps vs Langtrace) | Fase 5 — **decisão consciente: pulado por agora**. Tracing nativo do crewai exigiria mandar dados de execução pra nuvem do CrewAI AMP; sem necessidade clara disso ainda, optou-se por não ligar telemetria externa. Logs verbose locais seguem como substituto |
+| Persistência de conversas / memória de longo prazo | Fora de escopo — não há necessidade de histórico entre sessões nesse projeto de estudo |
+| Multi-tenant / autenticação do cliente | Fora de escopo — decisão explícita, projeto não atende múltiplos clientes reais |
+| Migração Chroma → pgvector/Qdrant | Fora de escopo — decisão explícita, Chroma local é suficiente pro tamanho atual do projeto |
+| Rate limiting no `/chat` | Fase 6 — **resolvido**: `slowapi`, 10 req/min por IP |
+| Custo/uso de tokens visível | Fase 6 — **resolvido**: `SacState` acumula tokens (Triage + specialist), exposto na API e na UI como chip |
 
 ---
 

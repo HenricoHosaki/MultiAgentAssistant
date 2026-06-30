@@ -23,7 +23,13 @@ function App() {
       const data = await response.json();
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", text: data.answer, intent: data.intent, source: data.source },
+        {
+          role: "assistant",
+          text: data.answer,
+          intent: data.intent,
+          source: data.source,
+          tokenUsage: data.token_usage,
+        },
       ]);
     } catch (error) {
       setMessages((prev) => [
@@ -50,8 +56,8 @@ function App() {
                 <div className="avatar-spacer" />
                 <div className="source-chip">
                   {message.source.endsWith(".md")
-                    ? `📄 Leu ${message.source}`
-                    : `🔧 Consultei ${message.source}`}
+                    ? `Leu ${message.source}`
+                    : `Consultei ${message.source}`}
                 </div>
               </div>
             )}
@@ -61,6 +67,14 @@ function App() {
                 <p>{message.text}</p>
               </div>
             </div>
+            {message.role === "assistant" && message.tokenUsage && (
+              <div className="message-row assistant token-usage-row">
+                <div className="avatar-spacer" />
+                <div className="token-usage-chip">
+                   {message.tokenUsage.total_tokens} tokens ({message.tokenUsage.prompt_tokens} prompt + {message.tokenUsage.completion_tokens} completion)
+                </div>
+              </div>
+            )}
           </div>
         ))}
         {loading && (

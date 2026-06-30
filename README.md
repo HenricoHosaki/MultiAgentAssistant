@@ -203,3 +203,51 @@ MultiAgentAssistant/
   chargebacks, etc.) and a dedicated `*_faq.md`. No code changes were needed — `ingest.py`
   already globs any `.md` file in the domain folder. Re-ingested: Products 81 chunks,
   Delivery 15 chunks, Payments 14 chunks (up from ~9, ~5, ~5 before).
+- [x] **LLM migration** — moved the chat/reasoning LLM from Gemini (free tier exhausted
+  during testing) to Cerebras (`cerebras/gpt-oss-120b`); embeddings stayed on Gemini.
+  See the "Why Cerebras" note above the environment variables table for the debugging story.
+
+---
+
+## Progress — Phase 5 (Observability + eval)
+
+- [ ] **Tracing** — deliberately skipped for now. CrewAI's native tracing requires opting in
+  to send execution data to CrewAI's cloud platform (CrewAI AMP); decided not to enable it
+  without a clearer need, rather than turning on cloud telemetry by default. Local verbose
+  logs (already on) remain the substitute.
+- [x] **Golden set** (`eval/golden_set.jsonl`) — 19 questions across Products, Delivery,
+  Payments, and out-of-scope/escalation cases, grounded in the actual knowledge base content.
+- [x] **RAGAS evaluation script** (`eval/run_eval.py`) — runs each golden-set question through
+  the real `SacFlow`, re-queries the retriever directly to get the actual RAG context (since
+  the Flow only exposes the cited source filename, not the raw chunks), and scores
+  `faithfulness` + `answer_relevancy` using Cerebras as the judge LLM and Gemini embeddings.
+  Questions with no RAG domain (`other`) are expected to score `NaN` on faithfulness — there's
+  no context to check faithfulness against.
+- [x] Dependency troubleshooting: `ragas` latest (0.4.3) failed to import (`langchain_community`
+  removed the `ChatVertexAI` shim it depends on); pinned `ragas==0.2.15` and
+  `langchain-community<0.4` to get a working combination.
+- [x] **First run results**: `{'faithfulness': 0.8333, 'answer_relevancy': nan}`. RAGAS fires
+  38 parallel jobs (19 questions × 2 metrics); most hit `TimeoutError` against Cerebras's free
+  tier under that concurrency, so `faithfulness` only reflects the few jobs that completed in
+  time, and `answer_relevancy` (which needs an extra LLM round-trip to generate a synthetic
+  question) failed entirely. Accepted as-is rather than re-tuning `RunConfig` concurrency/
+  timeout — a real, undisguised limitation of evaluating against a free-tier API in parallel,
+  not a flaw in the pipeline itself. Detailed per-row results in `eval/eval_results.csv`.
+
+**🚧 Phase 5 in progress** — eval pipeline built and validated end-to-end; tracing intentionally deferred.
+
+---
+
+## Progress — Phase 6 (Hardening, partial)
+
+Scope explicitly narrowed: no multi-tenant/auth, no vector store migration (staying on Chroma)
+— out of scope for this learning project.
+
+- [x] **API failures now escalate instead of crashing** — `triage` and the 3 `handle_*`
+  methods in `SacFlow` wrap their LLM/Crew calls in `try/except`; a failure (rate limit, 5xx,
+  etc.) routes into the same handoff-to-human path used for "no answer found", with reason
+  `system_error`, instead of the whole Flow raising and FastAPI returning a raw 500.
+- [x] **Token usage surfaced end-to-end** — `SacState` accumulates `prompt_tokens` /
+  `completion_tokens` / `total_tokens` across the Triage call and the specialist Crew call;
+  `POST /chat` returns them; the React UI shows a small "🔢 N tokens" chip under each response.
+- [x] **Rate limiting** — `slowapi` added, `/chat` limited to 10 requests/minute per IP.

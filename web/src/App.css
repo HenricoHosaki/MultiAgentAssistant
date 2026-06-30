@@ -45,6 +45,15 @@
   font-style: italic;
 }
 
+.token-usage-row {
+  margin-top: -0.5rem;
+}
+
+.token-usage-chip {
+  font-size: 0.68rem;
+  color: #666;
+}
+
 .message-row {
   display: flex;
   align-items: flex-end;

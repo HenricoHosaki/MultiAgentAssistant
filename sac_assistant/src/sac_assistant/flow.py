@@ -24,9 +24,25 @@ class SacState(BaseModel):
     found_answer: bool = True
     source: str = ""
     answer: str = ""
+    system_error: bool = False
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    total_tokens: int = 0
 
 
 class SacFlow(Flow[SacState]):
+
+    def _add_usage(self, usage) -> None:
+        if usage is None:
+            return
+        if isinstance(usage, dict):
+            self.state.prompt_tokens += usage.get("prompt_tokens", 0)
+            self.state.completion_tokens += usage.get("completion_tokens", 0)
+            self.state.total_tokens += usage.get("total_tokens", 0)
+        else:
+            self.state.prompt_tokens += usage.prompt_tokens
+            self.state.completion_tokens += usage.completion_tokens
+            self.state.total_tokens += usage.total_tokens
 
     @start()
     def guardrail_check(self):
@@ -56,12 +72,19 @@ class SacFlow(Flow[SacState]):
                 "fit any of those categories. You only classify, you never answer the question."
             ),
         )
-        result = triage_agent.kickoff(
-            self.state.question,
-            response_format=TriageResult,
-        )
+        try:
+            result = triage_agent.kickoff(
+                self.state.question,
+                response_format=TriageResult,
+            )
+        except Exception:
+            self.state.intent = "other"
+            self.state.system_error = True
+            return
+
         self.state.intent = result.pydantic.intent
         self.state.confidence = result.pydantic.confidence
+        self._add_usage(result.usage_metrics)
 
     @router(triage)
     def route(self):
@@ -69,27 +92,53 @@ class SacFlow(Flow[SacState]):
 
     @listen("products")
     def handle_products(self):
-        result = ProductsCrew().crew().kickoff(inputs={"question": self.state.question})
+        try:
+            result = ProductsCrew().crew().kickoff(inputs={"question": self.state.question})
+        except Exception:
+            self.state.found_answer = False
+            self.state.system_error = True
+            return
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
         self.state.source = result.pydantic.source
+        self._add_usage(result.token_usage)
 
     @listen("delivery")
     def handle_delivery(self):
-        result = DeliveryCrew().crew().kickoff(inputs={"question": self.state.question})
+        try:
+            result = DeliveryCrew().crew().kickoff(inputs={"question": self.state.question})
+        except Exception:
+            self.state.found_answer = False
+            self.state.system_error = True
+            return
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
         self.state.source = result.pydantic.source
+        self._add_usage(result.token_usage)
 
     @listen("payments")
     def handle_payments(self):
-        result = PaymentsCrew().crew().kickoff(inputs={"question": self.state.question})
+        try:
+            result = PaymentsCrew().crew().kickoff(inputs={"question": self.state.question})
+        except Exception:
+            self.state.found_answer = False
+            self.state.system_error = True
+            return
         self.state.answer = result.pydantic.answer
         self.state.found_answer = result.pydantic.found_answer
         self.state.source = result.pydantic.source
+        self._add_usage(result.token_usage)
 
     @listen("other")
     def handle_other(self):
+        if self.state.system_error:
+            open_ticket(self.state.question, reason="system_error")
+            self.state.answer = (
+                "We're experiencing a technical issue right now, so I've forwarded your "
+                "question to a human agent who will follow up with you shortly."
+            )
+            return
+
         self.state.answer = (
             "I'm sorry, I can only help with questions about products, delivery, or payments."
         )
@@ -100,7 +149,12 @@ class SacFlow(Flow[SacState]):
         no_answer = not self.state.found_answer
 
         if low_confidence or no_answer:
-            reason = "low_confidence" if low_confidence else "no_answer_found"
+            if self.state.system_error:
+                reason = "system_error"
+            elif low_confidence:
+                reason = "low_confidence"
+            else:
+                reason = "no_answer_found"
             open_ticket(self.state.question, reason=reason)
             self.state.answer = (
                 "I wasn't able to fully resolve your question, so I've forwarded it to "
