@@ -8,7 +8,11 @@ from sac_assistant.crews.products_crew.products_crew import ProductsCrew
 from sac_assistant.crews.delivery_crew.delivery_crew import DeliveryCrew
 from sac_assistant.crews.payments_crew.payments_crew import PaymentsCrew
 from sac_assistant.guardrails.input_guardrail import check_input
+from sac_assistant.translation import detect_language, message
 from sac_assistant.tools.ticket_tool import open_ticket
+
+LOW_CONFIDENCE_THRESHOLD = 0.35
+
 
 class TriageResult(BaseModel):
     intent: Literal["products", "delivery", "payments", "other"]
@@ -17,6 +21,7 @@ class TriageResult(BaseModel):
 
 class SacState(BaseModel):
     question: str = ""
+    language: str = "en"
     blocked: bool = False
     block_reason: str = ""
     intent: str = ""
@@ -47,6 +52,7 @@ class SacFlow(Flow[SacState]):
 
     @start()
     def guardrail_check(self):
+        self.state.language = detect_language(self.state.question)
         passed, reason = check_input(self.state.question)
         self.state.blocked = not passed
         self.state.block_reason = reason
@@ -58,10 +64,7 @@ class SacFlow(Flow[SacState]):
     @listen("blocked")
     def handle_blocked(self):
         self.state.outcome = "blocked"
-        self.state.answer = (
-            "Não posso processar essa solicitação. Evite compartilhar dados sensíveis "
-            "como CPF ou número de cartão, e reformule sua pergunta."
-        )
+        self.state.answer = message("blocked", self.state.language)
 
     @listen("allowed")
     def triage(self):
@@ -139,32 +142,24 @@ class SacFlow(Flow[SacState]):
         if self.state.system_error:
             open_ticket(self.state.question, reason="system_error")
             self.state.outcome = "escalated"
-            self.state.answer = (
-                "We're experiencing a technical issue right now, so I've forwarded your "
-                "question to a human agent who will follow up with you shortly."
-            )
+            self.state.answer = message("system_error", self.state.language)
             return
 
         self.state.outcome = "refused"
-        self.state.answer = (
-            "I'm sorry, I can only help with questions about products, delivery, or payments."
-        )
+        self.state.answer = message("out_of_scope", self.state.language)
 
     @listen(or_(handle_products, handle_delivery, handle_payments))
     def check_escalation(self):
-        low_confidence = self.state.confidence < 0.6
         no_answer = not self.state.found_answer
+        low_confidence = self.state.confidence < LOW_CONFIDENCE_THRESHOLD
 
-        if low_confidence or no_answer:
+        if no_answer or low_confidence:
             if self.state.system_error:
                 reason = "system_error"
-            elif low_confidence:
-                reason = "low_confidence"
-            else:
+            elif no_answer:
                 reason = "no_answer_found"
+            else:
+                reason = "low_confidence"
             open_ticket(self.state.question, reason=reason)
             self.state.outcome = "escalated"
-            self.state.answer = (
-                "I wasn't able to fully resolve your question, so I've forwarded it to "
-                "a human agent who will follow up with you shortly."
-            )
+            self.state.answer = message("escalation", self.state.language)

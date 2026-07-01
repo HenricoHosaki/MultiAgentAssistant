@@ -13,6 +13,12 @@ def _search(collection_name: str, query: str) -> str:
     documents = results["documents"][0]
     metadatas = results["metadatas"][0]
 
+    if not documents:
+        return (
+            "No relevant information was found in the knowledge base for this question. "
+            "Do not guess — tell the customer you don't have this information."
+        )
+
     formatted = []
     for doc, meta in zip(documents, metadatas):
         formatted.append(f"Source: {meta['source']}\n{doc}")

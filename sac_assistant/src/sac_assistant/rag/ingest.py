@@ -9,8 +9,16 @@ load_dotenv()
 
 KNOWLEDGE_ROOT = Path(__file__).parent.parent.parent.parent / "knowledge"
 
+MIN_BODY_CHARS = 20
+
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 chroma_client = chromadb.PersistentClient(path=str(Path(__file__).parent / "chroma_db"))
+
+
+def _has_content(section: str) -> bool:
+    parts = section.split("\n", 1)
+    body = parts[1].strip() if len(parts) > 1 else ""
+    return len(body) >= MIN_BODY_CHARS
 
 
 def ingest(domain: str):
@@ -21,13 +29,13 @@ def ingest(domain: str):
     existing_ids = collection.get()["ids"]
     if existing_ids:
         collection.delete(ids=existing_ids)
-        
+
     for file_path in md_files:
         text = file_path.read_text(encoding="utf-8")
         sections = text.split("## ")
         for section in sections:
             section = section.strip()
-            if not section:
+            if not section or not _has_content(section):
                 continue
             result = client.models.embed_content(
                 model="gemini-embedding-001",

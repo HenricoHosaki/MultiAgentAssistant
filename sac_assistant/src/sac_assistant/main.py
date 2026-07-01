@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import sys
 import warnings
 
@@ -9,17 +8,11 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
 
 def run():
-    """
-    Run the flow.
-    """
     flow = SacFlow()
     flow.kickoff(inputs = {"question": "Do you offer a loyalty rewards program with points?"})
     print(flow.state.answer)
 
 def train():
-    """
-    Train the crew for a given number of iterations.
-    """
     inputs = {
         "question": "Is the backpack waterproof?"
     }
@@ -30,9 +23,6 @@ def train():
         raise Exception(f"An error occurred while training the crew: {e}")
 
 def replay():
-    """
-    Replay the crew execution from a specific task.
-    """
     try:
         ProductsCrew().crew().replay(task_id=sys.argv[1])
 
@@ -40,9 +30,6 @@ def replay():
         raise Exception(f"An error occurred while replaying the crew: {e}")
 
 def test():
-    """
-    Test the crew execution and returns the results.
-    """
     inputs = {
         "question": "Is the backpack waterproof?"
     }
@@ -54,9 +41,6 @@ def test():
         raise Exception(f"An error occurred while testing the crew: {e}")
 
 def run_with_trigger():
-    """
-    Run the crew with trigger payload.
-    """
     import json
 
     if len(sys.argv) < 2:
