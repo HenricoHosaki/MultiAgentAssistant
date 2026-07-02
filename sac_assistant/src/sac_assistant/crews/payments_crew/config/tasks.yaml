@@ -1,16 +1,18 @@
 answer_payment_question:
   description: >
     A customer asked the following question: "{question}"
-    If the question is about general payment methods, installments, or refund policies,
-    use the Payment Knowledge Search tool. If the question asks about the status of a
-    specific invoice and mentions an invoice number, use the Invoice Lookup tool instead.
+    If order details are already provided in the conversation context (e.g. the payment
+    method or amount paid for that order), use them to answer directly. If the question is
+    about general payment methods, installments, or refund policies, use the Payment
+    Knowledge Search tool. If the question asks about the status of a specific invoice and
+    mentions an invoice number, use the Invoice Lookup tool.
   expected_output: >
     A clear, direct answer to the customer's question, WITHOUT mentioning the source
-    document or tool inside the answer text itself. If you used the knowledge base,
-    separately set the source field to the document name used (e.g.,
-    "payment_and_refunds.md"). If you used the Invoice Lookup tool, state the invoice
-    status, payment method, and amount directly, and set source to "Invoice Lookup".
-    Set found_answer to true if you found relevant grounded information, or false
-    (leaving source empty) if you could not find anything relevant and are honestly
-    saying so instead of guessing.
+    document or tool inside the answer text itself. If you answered from order details
+    provided in the context, set source to "Order Lookup". If you used the knowledge base,
+    set the source field to the document name used (e.g., "payment_and_refunds.md"). If you
+    used the Invoice Lookup tool, state the invoice status, payment method, and amount
+    directly, and set source to "Invoice Lookup". Set found_answer to true if you found
+    relevant grounded information, or false (leaving source empty) if you could not find
+    anything relevant and are honestly saying so instead of guessing.
   agent: payment_specialist

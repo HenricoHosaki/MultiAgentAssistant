@@ -1,7 +1,8 @@
 # MultiAgentAssistant
 
-Multi-agent Customer Support (SAC) assistant — answers questions about
-**Products, Deliveries, and Payments** using specialized agents + RAG.
+Multi-agent Customer Support (SAC) assistant — **Aria** — answers questions about
+**Products, Deliveries, and Payments** using specialized agents + RAG, with multi-turn
+memory, bilingual (PT-BR/EN) replies, guardrails, and human-handoff escalation.
 
 > Architecture, decisions, and roadmap: see [docs/PLANEJAMENTO.md](./docs/PLANEJAMENTO.md) and [docs/ROADMAP_ESTUDOS.md](./docs/ROADMAP_ESTUDOS.md).
 
@@ -73,8 +74,12 @@ For the full web chat, you need **two terminals running at the same time**:
 **Terminal 1 — backend API:**
 ```powershell
 cd sac_assistant
-uv run uvicorn sac_assistant.api.main:app --reload --port 8000
+uv run uvicorn sac_assistant.api.main:app --port 8000 --reload --reload-dir src
 ```
+> `--reload-dir src` limits the file watcher to your source code. Without it, the default
+> `--reload` also watches `.venv`, and package changes there can restart the server mid-request
+> — which breaks the order lookup (the app calls its own `/mock/orders` endpoint over HTTP).
+> For a rock-solid demo, you can drop `--reload` entirely.
 
 **Terminal 2 — frontend:**
 ```powershell
@@ -82,14 +87,15 @@ cd web
 npm run dev
 ```
 
-Open the URL Vite prints (usually `http://localhost:5173`). The chat sends
-each question through the same `SacFlow` used by the CLI: a Triage agent
-classifies it into Products, Delivery, Payments, or Other, then routes to the
-matching specialist crew, grounded in that domain's knowledge base. Each
-response shows the cited source (knowledge file or lookup tool) as a small
-chip above the message. Out-of-scope questions are declined; questions the
-specialists can't ground an answer for are escalated to a mock human handoff
-instead of being guessed.
+Open the URL Vite prints (usually `http://localhost:5173`). The chat sends each question
+(with recent history) through the same `SacFlow` used by the CLI: the input guardrail runs
+first; if an order number is mentioned, the Flow fetches that order from the mock order
+service and injects it as shared context; a Triage agent classifies the question into
+Products, Delivery, Payments, or Other; it routes to the matching specialist crew, grounded
+in that domain's knowledge base (plus the order context when relevant). Replies follow the
+customer's language (PT-BR or EN). Each response shows the cited source as a chip; when the
+assistant can't ground an answer it escalates to a mock human handoff and shows the ticket
+number instead of guessing.
 
 ## Project structure
 
@@ -97,28 +103,32 @@ instead of being guessed.
 MultiAgentAssistant/
 ├── docs/                       # PLANEJAMENTO.md, ROADMAP_ESTUDOS.md
 ├── README.md
-├── web/                        # React + Vite chat UI
+├── web/                        # React + Vite chat UI (branded "Aria")
 │   └── src/
-│       ├── App.jsx             # chat state, fetch to the backend
+│       ├── App.jsx             # chat state + history, fetch to the backend, ticket chip, "Nova conversa"
 │       └── App.css
 └── sac_assistant/              # CrewAI project
     ├── .env                    # secrets (not committed to git)
     ├── pyproject.toml          # dependencies + commands
     ├── knowledge/              # RAG knowledge base
-    │   ├── products/           # catalog, warranty, usage & care
-    │   ├── delivery/           # shipping, tracking, timeframes
-    │   └── payments/           # payment methods, refunds
+    │   ├── products/           # 12 per-category files + comparisons/compatibility
+    │   ├── delivery/           # shipping, tracking, timeframes, edge cases
+    │   └── payments/           # payment methods, refunds, edge cases
+    ├── eval/                   # golden_set.jsonl + run_eval.py (RAGAS)
     └── src/sac_assistant/
         ├── main.py             # CLI entry point (run/train/test)
-        ├── flow.py             # SacFlow: guardrail -> Triage -> router -> specialist crew -> escalation
+        ├── flow.py             # SacFlow: guardrail -> order-context enrichment -> Triage -> router -> specialist -> escalation
+        ├── order_service.py    # cross-cutting order lookup (fetch/format/extract id) used by the Flow
+        ├── translation.py      # language detection + bilingual canned messages
         ├── api/
-        │   └── main.py         # FastAPI app, POST /chat wraps SacFlow
-        ├── crews/              # one isolated crew per domain
-        │   ├── products_crew/
-        │   │   ├── config/agents.yaml, tasks.yaml
-        │   │   └── products_crew.py
-        │   ├── delivery_crew/  (same layout)
-        │   └── payments_crew/  (same layout)
+        │   └── main.py         # FastAPI app: POST /chat (+ rate limit) and the mock store router
+        ├── mock_store/         # in-app mock order/product API (served over HTTP)
+        │   ├── data.py         # products + orders (coherent with the knowledge base)
+        │   └── router.py       # GET /mock/products/{id}, GET /mock/orders/{id}
+        ├── crews/              # one isolated, single-responsibility crew per domain
+        │   ├── products_crew/  # ProductKnowledgeSearchTool only
+        │   ├── delivery_crew/  # DeliveryKnowledgeSearchTool only
+        │   └── payments_crew/  # PaymentKnowledgeSearchTool + InvoiceLookupTool
         ├── guardrails/
         │   └── input_guardrail.py   # regex checks for PII / prompt injection
         ├── schemas/
@@ -128,10 +138,14 @@ MultiAgentAssistant/
         │   └── retriever.py    # similarity search against Chroma (per-domain collection)
         └── tools/
             ├── knowledge_search_tool.py  # one CrewAI Tool per domain, wraps the retriever
-            ├── order_tool.py            # mock OrderLookupTool (Delivery)
-            ├── payment_tool.py          # mock InvoiceLookupTool (Payments)
-            └── ticket_tool.py           # mock open_ticket() for escalation
+            ├── payment_tool.py           # mock InvoiceLookupTool (Payments)
+            └── ticket_tool.py            # mock open_ticket() for escalation
 ```
+
+> Order lookups are **not** a per-agent tool. Because an order is a cross-cutting entity
+> (a customer may ask about it from a delivery, payment, or product angle), the Flow fetches
+> the order once and injects it as shared context for whichever specialist runs — the same
+> orchestrator-level pattern as the guardrail.
 
 ## Environment variables
 
@@ -251,3 +265,29 @@ Scope explicitly narrowed: no multi-tenant/auth, no vector store migration (stay
   `completion_tokens` / `total_tokens` across the Triage call and the specialist Crew call;
   `POST /chat` returns them; the React UI shows a small "🔢 N tokens" chip under each response.
 - [x] **Rate limiting** — `slowapi` added, `/chat` limited to 10 requests/minute per IP.
+- [x] **Error logging** — the `try/except` blocks in `SacFlow` now `logger.exception(...)`
+  the real error before degrading gracefully, so failures (e.g. an API 429) are visible in
+  the logs instead of hidden behind the generic "technical issue" message.
+
+---
+
+## Progress — Refinements (post-Phase-6)
+
+- [x] **Rebranded to "Aria"** — display name in the UI header, browser tab, and empty state
+  (internal identifiers like `SacFlow`/`sac_assistant` unchanged — invisible to the customer).
+- [x] **Mock store service** (`mock_store/`) — an in-app order/product API served over HTTP by
+  the same FastAPI app, seeded with data coherent with the Products knowledge base. Lets the
+  order integration make real HTTP calls (production would point at the company's real API).
+- [x] **Rich order lookup** — orders return status, items, amount paid, payment method, shipping
+  address, purchase date, tracking, and estimated delivery (replacing the earlier thin cart mock).
+- [x] **Cross-cutting order context (architecture)** — order lookup moved out of the specialists
+  and up into the Flow as a shared context-enrichment step, so order questions work regardless of
+  which domain the Triage picks; specialists stay single-responsibility.
+- [x] **Multi-turn memory** — the frontend sends recent history; the Flow builds a contextualized
+  question so follow-ups ("and when does it arrive?", "and its payment method?") resolve, including
+  recovering the order number from earlier in the conversation.
+- [x] **Bilingual consistency** — an explicit language directive is injected so specialists always
+  answer in the customer's language and compose in their own words instead of echoing raw data.
+- [x] **Escalation made tangible** — the mock ticket number is surfaced to the UI as a chip.
+- [x] **UI redesign** — fixed-height chat card with internal scroll, avatar bubbles, typing
+  indicator, source/token/ticket chips, and a "Nova conversa" reset button.

@@ -1,13 +1,15 @@
 answer_product_question:
   description: >
     A customer asked the following question: "{question}"
-    Use the Product Knowledge Search tool to find relevant information before answering.
+    If the question asks which products are in a specific order, use the order details
+    provided in the conversation context to name them. Use the Product Knowledge Search
+    tool to find any specs, compatibility, or usage details about a product.
   expected_output: >
-    A clear, direct answer to the customer's question, grounded in the knowledge base,
-    WITHOUT mentioning the source document inside the answer text itself. Separately,
-    set the source field to the name of the document you used (e.g., "catalog.md").
-    If no relevant information is found, say so honestly instead of guessing, and leave
-    source empty. Set found_answer to true if you found relevant grounded information,
-    or false if you could not find anything relevant and are honestly saying so instead
-    of guessing.
+    A clear, direct answer to the customer's question, WITHOUT mentioning the source
+    document or tool inside the answer text itself. If you used the knowledge base, set
+    the source field to the document name used (e.g., "keyboards.md"). If you answered from
+    order details provided in the context, set source to "Order Lookup". If no relevant
+    information is found, say so honestly and leave source empty. Set found_answer to true
+    if you found relevant grounded information, or false if you could not find anything
+    relevant and are honestly saying so instead of guessing.
   agent: products_specialist

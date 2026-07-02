@@ -1,16 +1,15 @@
 answer_delivery_question:
   description: >
     A customer asked the following question: "{question}"
-    If the question is about general shipping policies, timeframes, or tracking rules,
-    use the Delivery Knowledge Search tool. If the question asks about the status of a
-    specific order and mentions an order number, use the Order Lookup tool instead.
+    If order details are already provided in the conversation context, use them to answer
+    directly. Otherwise, if the question is about general shipping policies, timeframes, or
+    tracking rules, use the Delivery Knowledge Search tool.
   expected_output: >
     A clear, direct answer to the customer's question, WITHOUT mentioning the source
-    document or tool inside the answer text itself. If you used the knowledge base,
-    separately set the source field to the document name used (e.g.,
-    "shipping_and_tracking.md"). If you used the Order Lookup tool, state the order
-    status, tracking code, and estimated delivery directly, and set source to
-    "Order Lookup". Set found_answer to true if you found relevant grounded information,
-    or false (leaving source empty) if you could not find anything relevant and are
-    honestly saying so instead of guessing.
+    document or tool inside the answer text itself. If you answered from order details
+    provided in the context, set source to "Order Lookup" and include only the details the
+    customer asked about. If you used the knowledge base, set the source field to the
+    document name used (e.g., "shipping_and_tracking.md"). Set found_answer to true if you
+    found relevant grounded information, or false (leaving source empty) if you could not
+    find anything relevant and are honestly saying so instead of guessing.
   agent: delivery_specialist

@@ -1,57 +1,126 @@
-.chat-container {
-  max-width: 640px;
-  margin: 2rem auto;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  color: #e5e5e5;
+.app {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  min-height: 0;
 }
 
-.chat-container h1 {
-  text-align: center;
+.chat-card {
+  width: 100%;
+  max-width: 720px;
+  height: min(88vh, 900px);
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------- Header ---------- */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--card-header);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.new-chat-btn {
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.new-chat-btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.new-chat-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--user-a), var(--user-b));
+  font-size: 1.25rem;
+}
+
+.chat-header h1 {
+  font-size: 1.05rem;
   font-weight: 600;
-  letter-spacing: -0.5px;
+  margin: 0;
+  color: var(--text);
 }
 
+.chat-header .subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0.1rem 0 0;
+}
+
+/* ---------- Messages (internal scroll) ---------- */
 .messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  min-height: 320px;
-  background: #161616;
-  border: 1px solid #2a2a2a;
-  border-radius: 14px;
   padding: 1.25rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
+.messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: #333844;
+  border-radius: 4px;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.empty-state {
+  margin: auto;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ---------- Message groups / bubbles ---------- */
 .message-group {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-}
-
-.source-row {
-  margin-bottom: -0.5rem;
-}
-
-.avatar-spacer {
-  width: 28px;
-  flex-shrink: 0;
-}
-
-.source-chip {
-  font-size: 0.7rem;
-  color: #777;
-  font-style: italic;
-}
-
-.token-usage-row {
-  margin-top: -0.5rem;
-}
-
-.token-usage-chip {
-  font-size: 0.68rem;
-  color: #666;
 }
 
 .message-row {
@@ -71,26 +140,34 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: #2a2a2a;
+  background: #2a2f3a;
   font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.avatar-spacer {
+  width: 28px;
+  flex-shrink: 0;
 }
 
 .message-bubble {
-  max-width: 75%;
-  padding: 0.6rem 0.9rem;
+  max-width: 72%;
+  padding: 0.65rem 0.9rem;
   border-radius: 16px;
   animation: fade-in 0.2s ease-out;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .message-row.user .message-bubble {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, var(--user-a), var(--user-b));
   color: white;
   border-bottom-right-radius: 4px;
 }
 
 .message-row.assistant .message-bubble {
-  background: #232323;
-  color: #f0f0f0;
+  background: var(--assistant-bg);
+  color: #f0f2f5;
   border-bottom-left-radius: 4px;
 }
 
@@ -99,40 +176,125 @@
   line-height: 1.45;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+/* ---------- Chips (source / tokens) ---------- */
+.source-row {
+  margin-bottom: -0.4rem;
 }
 
+.source-chip {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.token-usage-row {
+  margin-top: -0.4rem;
+}
+
+.token-usage-chip {
+  font-size: 0.68rem;
+  color: var(--text-faint);
+}
+
+.ticket-row {
+  margin-top: -0.2rem;
+}
+
+.ticket-chip {
+  font-size: 0.72rem;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Typing indicator ---------- */
+.typing span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 1px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: blink 1.2s infinite ease-in-out both;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* ---------- Input ---------- */
 .input-row {
   display: flex;
   gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+  background: var(--card-header);
+  flex-shrink: 0;
 }
 
 .input-row input {
   flex: 1;
-  padding: 0.65rem 0.9rem;
+  padding: 0.7rem 0.95rem;
   border-radius: 10px;
-  border: 1px solid #333;
-  background: #1a1a1a;
-  color: white;
+  border: 1px solid var(--border);
+  background: #12141a;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.input-row input::placeholder {
+  color: var(--text-faint);
 }
 
 .input-row input:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--accent);
 }
 
 .input-row button {
-  padding: 0.65rem 1.2rem;
+  padding: 0.7rem 1.3rem;
   border-radius: 10px;
   border: none;
-  background: #2563eb;
+  background: var(--accent);
   color: white;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.15s ease;
 }
 
-.input-row button:hover {
-  background: #1d4ed8;
+.input-row button:hover:not(:disabled) {
+  background: var(--user-b);
+}
+
+.input-row button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
