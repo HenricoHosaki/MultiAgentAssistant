@@ -53,10 +53,18 @@ class SacFlow(Flow[SacState]):
         shared context. Runs at the orchestrator level so every specialist can use it
         without each owning an order-lookup tool (order is a cross-cutting entity).
 
-        Falls back to the last successfully resolved order id for pronoun follow-ups
-        ("and what's in it?") instead of re-scanning conversation text — scanning text
-        previously mistook a year inside a date (e.g. "02/07/2026") for an order number."""
+        Each API request creates a fresh SacFlow, so self.state.last_order_id never survives
+        between turns — it only helps within a single flow run. The real cross-turn memory
+        channel is the conversation history the frontend resends, so pronoun follow-ups
+        ("and what's in it?") are resolved by scanning recent history for an order number.
+        The extraction regex excludes digits touching "/" or "-" so a year inside a date
+        (e.g. "02/07/2026") is never mistaken for an order number."""
         order_id = extract_order_id(self.state.question) or self.state.last_order_id
+        if not order_id:
+            for turn in reversed(self.state.history[-6:]):
+                order_id = extract_order_id(turn.get("text", ""))
+                if order_id:
+                    break
         if not order_id:
             return
         order = fetch_order(order_id)

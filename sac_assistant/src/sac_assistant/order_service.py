@@ -14,7 +14,9 @@ import requests
 BASE_URL = os.environ.get("STORE_URL", "http://localhost:8000/store")
 TIMEOUT = 10
 
-_ORDER_ID_PATTERN = re.compile(r"\b\d{4,6}\b")
+# Excludes digits touching "/" or "-" so a year inside a date (e.g. "02/07/2026" or
+# "2026-07-02") is never mistaken for an order number.
+_ORDER_ID_PATTERN = re.compile(r"(?<![\d/-])\b\d{4,6}\b(?![\d/-])")
 
 
 def extract_order_id(text: str) -> str | None:

@@ -70,6 +70,7 @@ function App() {
 
     const controller = new AbortController();
     abortControllerRef.current = controller;
+    const startTime = performance.now();
 
     try {
       const response = await fetch("http://localhost:8000/chat", {
@@ -79,6 +80,7 @@ function App() {
         signal: controller.signal,
       });
       const data = await response.json();
+      const elapsedSeconds = (performance.now() - startTime) / 1000;
       setMessages((prev) => [
         ...prev,
         {
@@ -89,6 +91,7 @@ function App() {
           ticketId: data.ticket_id,
           language: data.language,
           tokenUsage: data.token_usage,
+          elapsedSeconds,
         },
       ]);
     } catch (error) {
@@ -204,6 +207,9 @@ function App() {
                 <div className="message-row assistant token-usage-row">
                   <div className="avatar-spacer" />
                   <div className="token-usage-chip">
+                    {typeof message.elapsedSeconds === "number" && (
+                      <>⏱ {message.elapsedSeconds.toFixed(1)}s · </>
+                    )}
                     {message.tokenUsage.total_tokens} tokens (
                     {message.tokenUsage.prompt_tokens} prompt +{" "}
                     {message.tokenUsage.completion_tokens} completion)

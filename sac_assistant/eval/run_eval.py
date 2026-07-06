@@ -86,7 +86,7 @@ def evaluate_answers(answer_items: list[dict]):
         api_key=os.environ["CEREBRAS_API_KEY"],
     )
     judge_embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004",
+        model="models/gemini-embedding-001",
         google_api_key=os.environ["GEMINI_API_KEY"],
     )
 
@@ -106,6 +106,14 @@ def evaluate_answers(answer_items: list[dict]):
     return result, behavior_accuracy
 
 
+OUTCOME_TO_EXPECTED_BEHAVIOR = {
+    "answered": "answer",
+    "escalated": "escalate",
+    "refused": "refuse",
+    "blocked": "blocked",
+}
+
+
 def evaluate_behavior(behavior_items: list[dict]) -> float:
     """For must-escalate / must-refuse questions: did the flow take the right action?
 
@@ -116,7 +124,7 @@ def evaluate_behavior(behavior_items: list[dict]) -> float:
     for item in behavior_items:
         state = run_flow(item["question"])
         expected = item["expected_behavior"]
-        ok = state.outcome == expected
+        ok = OUTCOME_TO_EXPECTED_BEHAVIOR.get(state.outcome, state.outcome) == expected
         hits += int(ok)
         flag = "OK" if ok else "MISS"
         print(f"  [{flag}] {item['question']!r} -> outcome={state.outcome!r} (expected {expected!r})")
