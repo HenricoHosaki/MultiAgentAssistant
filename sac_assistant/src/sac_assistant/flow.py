@@ -9,6 +9,8 @@ from sac_assistant.crews.products_crew.products_crew import ProductsCrew
 from sac_assistant.crews.delivery_crew.delivery_crew import DeliveryCrew
 from sac_assistant.crews.payments_crew.payments_crew import PaymentsCrew
 from sac_assistant.guardrails.input_guardrail import check_input
+from sac_assistant.human_request import wants_human
+from sac_assistant.about_request import wants_about_info
 from sac_assistant.translation import detect_language, message
 from sac_assistant.order_service import extract_order_id, fetch_order, format_order
 from sac_assistant.tools.ticket_tool import open_ticket
@@ -27,6 +29,7 @@ class SacState(BaseModel):
     question: str = ""
     history: list[dict] = []
     order_context: str = ""
+    last_order_id: str = ""
     language: str = "en"
     blocked: bool = False
     block_reason: str = ""
@@ -48,18 +51,18 @@ class SacFlow(Flow[SacState]):
     def _enrich_order_context(self) -> None:
         """If the question mentions an order number, fetch the order once and keep it as
         shared context. Runs at the orchestrator level so every specialist can use it
-        without each owning an order-lookup tool (order is a cross-cutting entity)."""
-        order_id = extract_order_id(self.state.question)
-        if not order_id:
-            for turn in reversed(self.state.history[-6:]):
-                order_id = extract_order_id(turn.get("text", ""))
-                if order_id:
-                    break
+        without each owning an order-lookup tool (order is a cross-cutting entity).
+
+        Falls back to the last successfully resolved order id for pronoun follow-ups
+        ("and what's in it?") instead of re-scanning conversation text — scanning text
+        previously mistook a year inside a date (e.g. "02/07/2026") for an order number."""
+        order_id = extract_order_id(self.state.question) or self.state.last_order_id
         if not order_id:
             return
         order = fetch_order(order_id)
         if order:
             self.state.order_context = format_order(order)
+            self.state.last_order_id = order_id
 
     def _contextual_question(self) -> str:
         """Combine recent conversation history and any fetched order details with the current
@@ -107,12 +110,30 @@ class SacFlow(Flow[SacState]):
 
     @router(guardrail_check)
     def route_guardrail(self):
-        return "blocked" if self.state.blocked else "allowed"
+        if self.state.blocked:
+            return "blocked"
+        if wants_human(self.state.question):
+            return "human_requested"
+        if wants_about_info(self.state.question):
+            return "about"
+        return "allowed"
 
     @listen("blocked")
     def handle_blocked(self):
         self.state.outcome = "blocked"
         self.state.answer = message("blocked", self.state.language)
+
+    @listen("human_requested")
+    def handle_human_request(self):
+        self.state.ticket_id = open_ticket(self.state.question, reason="human_requested")
+        self.state.outcome = "escalated"
+        self.state.answer = message("human_requested", self.state.language)
+
+    @listen("about")
+    def handle_about(self):
+        self.state.outcome = "answered"
+        self.state.found_answer = True
+        self.state.answer = message("about", self.state.language)
 
     @listen("allowed")
     def triage(self):

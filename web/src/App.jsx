@@ -1,31 +1,82 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
+const STRINGS = {
+  en: {
+    subtitle: "Customer support assistant · products, deliveries, and payments",
+    newConversation: "New conversation",
+    greeting: "Hi! 👋 I'm Aria.",
+    greetingSub: "Ask me about products, deliveries, or payments.",
+    placeholder: "Type your question...",
+    send: "Send",
+    cancel: "Cancel",
+    connectionError: "Couldn't connect to the server. Please try again.",
+    switchTo: "PT",
+  },
+  pt: {
+    subtitle: "Assistente de atendimento · produtos, entregas e pagamentos",
+    newConversation: "Nova conversa",
+    greeting: "Oi! 👋 Sou a Aria.",
+    greetingSub: "Pergunte sobre produtos, entregas ou pagamentos.",
+    placeholder: "Digite sua pergunta...",
+    send: "Enviar",
+    cancel: "Cancelar",
+    connectionError: "Não consegui conectar com o servidor. Tente novamente.",
+    switchTo: "EN",
+  },
+};
+
+const SUGGESTED_QUESTIONS = {
+  en: [
+    "I'd like to know more about product usage and care",
+    "How does delivery work, and how long does it take?",
+    "Do you have a loyalty rewards program?",
+    "How can you help me?",
+    "What can you do?",
+  ],
+  pt: [
+    "Quero saber mais sobre uso e cuidados dos produtos",
+    "Como funcionam as entregas e qual o prazo?",
+    "Vocês têm programa de fidelidade com pontos?",
+    "Como você pode me ajudar?",
+    "O que vc consegue fazer?",
+  ],
+};
+
 function App() {
   const [messages, setMessages] = useState([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uiLanguage, setUiLanguage] = useState("en");
   const messagesRef = useRef(null);
+  const abortControllerRef = useRef(null);
+
+  const t = STRINGS[uiLanguage];
 
   useEffect(() => {
     const el = messagesRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, loading]);
 
-  async function sendQuestion() {
-    if (!question.trim() || loading) return;
+  async function sendQuestion(overrideText) {
+    const text = overrideText ?? question;
+    if (!text.trim() || loading) return;
 
     const history = messages.map((m) => ({ role: m.role, text: m.text }));
-    const userMessage = { role: "user", text: question };
+    const userMessage = { role: "user", text };
     setMessages((prev) => [...prev, userMessage]);
     setQuestion("");
     setLoading(true);
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     try {
       const response = await fetch("http://localhost:8000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: userMessage.text, history }),
+        signal: controller.signal,
       });
       const data = await response.json();
       setMessages((prev) => [
@@ -36,22 +87,36 @@ function App() {
           intent: data.intent,
           source: data.source,
           ticketId: data.ticket_id,
+          language: data.language,
           tokenUsage: data.token_usage,
         },
       ]);
     } catch (error) {
+      if (error.name === "AbortError") {
+        return;
+      }
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", text: "Erro ao conectar com o servidor." },
+        { role: "assistant", text: t.connectionError },
       ]);
     } finally {
       setLoading(false);
+      abortControllerRef.current = null;
     }
+  }
+
+  function cancelQuestion() {
+    abortControllerRef.current?.abort();
+    setMessages((prev) => prev.slice(0, -1));
   }
 
   function newConversation() {
     setMessages([]);
     setQuestion("");
+  }
+
+  function toggleLanguage() {
+    setUiLanguage((prev) => (prev === "en" ? "pt" : "en"));
   }
 
   function handleKeyDown(event) {
@@ -66,24 +131,40 @@ function App() {
             <div className="brand-logo">💬</div>
             <div>
               <h1>Aria</h1>
-              <p className="subtitle">Assistente de atendimento · produtos, entregas e pagamentos</p>
+              <p className="subtitle">{t.subtitle}</p>
             </div>
           </div>
-          <button
-            className="new-chat-btn"
-            onClick={newConversation}
-            disabled={messages.length === 0 || loading}
-          >
-            Nova conversa
-          </button>
+          <div className="header-actions">
+            <button className="lang-toggle-btn" onClick={toggleLanguage}>
+              {t.switchTo}
+            </button>
+            <button
+              className="new-chat-btn"
+              onClick={newConversation}
+              disabled={messages.length === 0 || loading}
+            >
+              {t.newConversation}
+            </button>
+          </div>
         </header>
 
         <div className="messages" ref={messagesRef}>
           {messages.length === 0 && !loading && (
             <div className="empty-state">
-              Olá! 👋 Sou a Aria.
+              {t.greeting}
               <br />
-              Pergunte sobre produtos, entregas ou pagamentos.
+              {t.greetingSub}
+              <div className="suggestion-chips">
+                {SUGGESTED_QUESTIONS[uiLanguage].map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    className="suggestion-chip"
+                    onClick={() => sendQuestion(suggestion)}
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
@@ -93,9 +174,13 @@ function App() {
                 <div className="message-row assistant source-row">
                   <div className="avatar-spacer" />
                   <div className="source-chip">
-                    {message.source.endsWith(".md")
-                      ? `Leu ${message.source}`
-                      : `Consultei ${message.source}`}
+                    {message.language === "pt"
+                      ? message.source.endsWith(".md")
+                        ? `Leu ${message.source}`
+                        : `Consultei ${message.source}`
+                      : message.source.endsWith(".md")
+                      ? `Read ${message.source}`
+                      : `Checked ${message.source}`}
                   </div>
                 </div>
               )}
@@ -109,7 +194,9 @@ function App() {
                 <div className="message-row assistant ticket-row">
                   <div className="avatar-spacer" />
                   <div className="ticket-chip">
-                    🎫 Chamado aberto: #{message.ticketId}
+                    {message.language === "pt"
+                      ? `🎫 Chamado aberto: #${message.ticketId}`
+                      : `🎫 Ticket opened: #${message.ticketId}`}
                   </div>
                 </div>
               )}
@@ -147,11 +234,19 @@ function App() {
             value={question}
             onChange={(event) => setQuestion(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Digite sua pergunta..."
+            placeholder={t.placeholder}
+            aria-label={t.placeholder}
+            disabled={loading}
           />
-          <button onClick={sendQuestion} disabled={loading || !question.trim()}>
-            Enviar
-          </button>
+          {loading ? (
+            <button onClick={cancelQuestion} className="cancel-btn">
+              {t.cancel}
+            </button>
+          ) : (
+            <button onClick={() => sendQuestion()} disabled={!question.trim()}>
+              {t.send}
+            </button>
+          )}
         </div>
       </div>
     </div>

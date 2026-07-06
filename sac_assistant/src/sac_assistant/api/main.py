@@ -6,14 +6,14 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
 from sac_assistant.flow import SacFlow
-from sac_assistant.mock_store.router import router as mock_router
+from sac_assistant.store.router import router as store_router
 
 limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI()
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-app.include_router(mock_router)
+app.include_router(store_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,6 +44,7 @@ class ChatResponse(BaseModel):
     intent: str
     source: str = ""
     ticket_id: str = ""
+    language: str = "en"
     token_usage: TokenUsage
 
 
@@ -62,6 +63,7 @@ def chat(request: Request, body: ChatRequest) -> ChatResponse:
         intent=flow.state.intent,
         source=flow.state.source,
         ticket_id=flow.state.ticket_id,
+        language=flow.state.language,
         token_usage=TokenUsage(
             prompt_tokens=flow.state.prompt_tokens,
             completion_tokens=flow.state.completion_tokens,

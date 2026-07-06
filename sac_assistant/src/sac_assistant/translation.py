@@ -6,6 +6,8 @@ _PT_HINTS = {
     "pedido", "entrega", "entregas", "pagamento", "pagamentos", "obrigado",
     "cartão", "cartao", "reembolso", "produto", "produtos", "preço", "preco",
     "está", "esta", "são", "sao", "tem", "fazer", "posso", "gostaria",
+    "quero", "falar", "humano", "atendente", "com", "um", "uma", "ajuda",
+    "preciso", "favor",
 }
 
 _EN_HINTS = {
@@ -53,6 +55,29 @@ _MESSAGES = {
         "en": (
             "I wasn't able to fully resolve your question, so I've forwarded it to a human "
             "agent who will follow up with you shortly."
+        ),
+    },
+    "about": {
+        "pt": (
+            "Eu sou a Aria, assistente de atendimento. Posso ajudar com dúvidas sobre "
+            "produtos, entregas e pagamentos, sempre com base na nossa base de conhecimento "
+            "e citando a fonte. Se eu não tiver certeza da resposta, encaminho você para um "
+            "atendente humano em vez de arriscar uma informação errada."
+        ),
+        "en": (
+            "I'm Aria, a customer support assistant. I can help with questions about "
+            "products, deliveries, and payments, grounded in our knowledge base and citing "
+            "my sources. If I'm not sure of an answer, I'll forward you to a human agent "
+            "instead of guessing."
+        ),
+    },
+    "human_requested": {
+        "pt": (
+            "Claro! Já estou encaminhando você para um atendente humano, que vai continuar "
+            "seu atendimento a partir daqui."
+        ),
+        "en": (
+            "Of course! I'm forwarding you to a human agent, who will take it from here."
         ),
     },
     "system_error": {

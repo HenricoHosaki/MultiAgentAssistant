@@ -1,0 +1,885 @@
+=== Answer questions (15) — RAGAS quality ===
+[answer 1/15] 'What is the polling rate of the Corsair K70 RGB Pro keyboard?'
+┌───────────────────────────── 🌊 Flow Execution ─────────────────────────────┐
+│                                                                             │
+│  Starting Flow Execution                                                    │
+│  Name: SacFlow                                                              │
+│  ID: ef3f9781-15ba-4cab-9637-0cb95ca2c5a8                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── 🌊 Flow Started ──────────────────────────────┐
+│                                                                             │
+│  Flow Started                                                               │
+│  Name: SacFlow                                                              │
+│  ID: ef3f9781-15ba-4cab-9637-0cb95ca2c5a8                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: guardrail_check                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: guardrail_check                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: route_guardrail                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: route_guardrail                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: triage                                                             │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────── 🤖 LiteAgent Started ────────────────────────────┐
+│                                                                             │
+│  LiteAgent Started                                                          │
+│  Role: Customer Question Triage Specialist                                  │
+│  Status: In Progress                                                        │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────── 🤖 LiteAgent Started ────────────────────────────┐
+│                                                                             │
+│  LiteAgent Session Started                                                  │
+│  Name: Customer Question Triage Specialist                                  │
+│  id: 54854ed0-429e-485e-bb08-6773b585643f                                   │
+│  role: Customer Question Triage Specialist                                  │
+│  goal: Classify the customer's question into the correct support category   │
+│  backstory: You read customer support questions and decide which            │
+│  specialist team should handle them: products, delivery, payments, or       │
+│  other if it doesn't fit any of those categories. You only classify, you    │
+│  never answer the question.                                                 │
+│  tools: None                                                                │
+│  verbose: False                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── ✅ LiteAgent Completed ───────────────────────────┐
+│                                                                             │
+│  LiteAgent Completed                                                        │
+│  Role: Customer Question Triage Specialist                                  │
+│  id: 54854ed0-429e-485e-bb08-6773b585643f                                   │
+│  role: Customer Question Triage Specialist                                  │
+│  goal: Classify the customer's question into the correct support category   │
+│  backstory: You read customer support questions and decide which            │
+│  specialist team should handle them: products, delivery, payments, or       │
+│  other if it doesn't fit any of those categories. You only classify, you    │
+│  never answer the question.                                                 │
+│  tools: None                                                                │
+│  verbose: False                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: triage                                                             │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: route                                                              │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: route                                                              │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: handle_products                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+┌───────────────────────── 🚀 Crew Execution Started ─────────────────────────┐
+│                                                                             │
+│  Crew Execution Started                                                     │
+│  Name: ProductsCrew                                                         │
+│  ID: 5a044dbf-bd43-4ab1-90b4-563f1b4f538e                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── 📋 Task Started ──────────────────────────────┐
+│                                                                             │
+│  Task Started                                                               │
+│  Name: answer_product_question                                              │
+│  ID: e751dc98-f844-4cd0-9186-d55fe8c3287c                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────── 🤖 Agent Started ──────────────────────────────┐
+│                                                                             │
+│  Agent: Product Support Specialist                                          │
+│                                                                             │
+│  Task: A customer asked the following question: "What is the polling rate   │
+│  of the Corsair K70 RGB Pro keyboard?                                       │
+│                                                                             │
+│  Answer in English, in your own words — do not echo the raw data            │
+│  verbatim." If the question asks which products are in a specific order,    │
+│  use the order details provided in the conversation context to name them.   │
+│  Use the Product Knowledge Search tool to find any specs, compatibility,    │
+│  or usage details about a product.                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────── 🔧 Tool Execution Started (#1) ───────────────────────┐
+│                                                                             │
+│  Tool: product_knowledge_search                                             │
+│  Args: {'query': 'Corsair K70 RGB Pro polling rate'}                        │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[32mTool product_knowledge_search executed with result: Source: model_comparisons.md
+Keyboards: BlackWidow V4 X vs Kumara K552 vs K70 RGB Pro
+The Corsair K70 RGB Pro is the premium option, with the highest polling rate (8000 Hz),
+full per-key RGB, and an o...[0m
+┌───────────────────── ✅ Tool Execution Completed (#1) ──────────────────────┐
+│                                                                             │
+│  Tool Completed                                                             │
+│  Tool: product_knowledge_search                                             │
+│  Output: Source: model_comparisons.md                                       │
+│  Keyboards: BlackWidow V4 X vs Kumara K552 vs K70 RGB Pro                   │
+│  The Corsair K70 RGB Pro is the premium option, with the highest polling    │
+│  rate (8000 Hz),                                                            │
+│  full per-key RGB, and an optical-mechanical switch built for the fastest   │
+│  response. The                                                              │
+│  Razer BlackWidow V4 X sits in the middle, with solid build quality and a   │
+│  1000 Hz polling                                                            │
+│  rate, but without the K70's ultra-high polling rate. The Redragon Kumara   │
+│  K552 is the                                                                │
+│  budget pick: it lacks N-key rollover, RGB customization, and has a much    │
+│  lower polling rate                                                         │
+│  (125 Hz), but costs a fraction of the other two.                           │
+│                                                                             │
+│  ---                                                                        │
+│                                                                             │
+│  Source: keyboards.md                                                       │
+│  Mechanical Keyboard [Corsair K70 RGB Pro]                                  │
+│  A premium mechanical keyboard with per-key RGB lighting, an aluminum       │
+│  frame, and dedicated multimedia controls for a durable, customizable       │
+│  typing experience.                                                         │
+│                                                                             │
+│  - Material: Aluminum top plate, ABS keycaps                                │
+│  - Switch type: Corsair OPX Optical-Mechanical Switches                     │
+│  - Layout: Full-size (104 keys)                                             │
+│  - Polling rate: 8000 Hz                                                    │
+│  - N-key rollover: Yes                                                      │
+│  - Connectivity: Wired (USB)                                                │
+│  - Cable length: 1.8 m, braided                                             │
+│  - Backlight: Per-key RGB                                                   │
+│  - Available colors: Black                                                  │
+│  - Price: USD $179.99                                                       │
+│                                                                             │
+│  ---                                                                        │
+│                                                                             │
+│  Source: keyboards.md                                                       │
+│  Frequently Asked Questions — Keyboards                                     │
+│  - Q: Can I use these keyboards on macOS?                                   │
+│    A: Yes, all three work as standard USB keyboards on macOS. RGB           │
+│  customization software is                                                  │
+│    only available for the BlackWidow V4 X and K70 RGB Pro, and key          │
+│  positions follow the                                                       │
+│    Windows layout (no native Mac key legends).                              │
+│  - Q: What's the difference between the switch types?                       │
+│    A: Razer Green/Yellow and Corsair OPX are tactile/linear mechanical      │
+│  switches built for                                                         │
+│    gaming, with shorter actuation distances. The Outemu Blue switches on    │
+│  the Kumara K552 are                                                        │
+│    clicky and louder, closer to a traditional mechanical typing feel.       │
+│  - Q: Are replacement keycaps available?                                    │
+│    A: Keycaps for the K70 RGB Pro and BlackWidow V4 X follow standard       │
+│  Cherry MX-compatible                                                       │
+│    stems and accept most aftermarket keycap sets. The Kumara K552 uses      │
+│  Outemu-compatible stems,                                                   │
+│    which have a smaller aftermarket selection.                              │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[35m[Finalize] todos_count=0, todos_with_results=0[0m
+┌─────────────────────────── ✅ Agent Final Answer ───────────────────────────┐
+│                                                                             │
+│  Agent: Product Support Specialist                                          │
+│                                                                             │
+│  Final Answer:                                                              │
+│  {                                                                          │
+│    "answer": "The Corsair K70 RGB Pro keyboard operates with an 8000 Hz     │
+│  polling rate.",                                                            │
+│    "found_answer": true,                                                    │
+│    "source": "keyboards.md"                                                 │
+│  }                                                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────── 📋 Task Completion ─────────────────────────────┐
+│                                                                             │
+│  Task Completed                                                             │
+│  Name: answer_product_question                                              │
+│  Agent: Product Support Specialist                                          │
+│                                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── Crew Completion ──────────────────────────────┐
+│                                                                             │
+│  Crew Execution Completed                                                   │
+│  Name: ProductsCrew                                                         │
+│  ID: 5a044dbf-bd43-4ab1-90b4-563f1b4f538e                                   │
+│  Final Output: {                                                            │
+│    "answer": "The Corsair K70 RGB Pro keyboard operates with an 8000 Hz     │
+│  polling rate.",                                                            │
+│    "found_answer": true,                                                    │
+│    "source": "keyboards.md"                                                 │
+│  }                                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: handle_products                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: check_escalation                                                   │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────── Tracing Status ───────────────────────────────┐
+│                                                                             │
+│  Info: Tracing is disabled.                                                 │
+│                                                                             │
+│  To enable tracing, do any one of these:                                    │
+│  • Set tracing=True in your Crew/Flow code                                  │
+│  • Set CREWAI_TRACING_ENABLED=true in your project's .env file              │
+│  • Run: crewai traces enable                                                │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: check_escalation                                                   │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────── ✅ Flow Completion ─────────────────────────────┐
+│                                                                             │
+│  Flow Execution Completed                                                   │
+│  Name: SacFlow                                                              │
+│  ID: ef3f9781-15ba-4cab-9637-0cb95ca2c5a8                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[answer 2/15] 'Which mouse has the highest max DPI in your catalog?'
+┌───────────────────────────── 🌊 Flow Execution ─────────────────────────────┐
+│                                                                             │
+│  Starting Flow Execution                                                    │
+│  Name: SacFlow                                                              │
+│  ID: bf37f69e-3b80-436a-afd1-dc9489227b1b                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── 🌊 Flow Started ──────────────────────────────┐
+│                                                                             │
+│  Flow Started                                                               │
+│  Name: SacFlow                                                              │
+│  ID: bf37f69e-3b80-436a-afd1-dc9489227b1b                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: guardrail_check                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: guardrail_check                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: route_guardrail                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: route_guardrail                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: triage                                                             │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+┌─────────────────────────── 🤖 LiteAgent Started ────────────────────────────┐
+│                                                                             │
+│  LiteAgent Started                                                          │
+│  Role: Customer Question Triage Specialist                                  │
+│  Status: In Progress                                                        │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────── 🤖 LiteAgent Started ────────────────────────────┐
+│                                                                             │
+│  LiteAgent Session Started                                                  │
+│  Name: Customer Question Triage Specialist                                  │
+│  id: 95a6825e-e0b5-497a-9f54-68f83a369165                                   │
+│  role: Customer Question Triage Specialist                                  │
+│  goal: Classify the customer's question into the correct support category   │
+│  backstory: You read customer support questions and decide which            │
+│  specialist team should handle them: products, delivery, payments, or       │
+│  other if it doesn't fit any of those categories. You only classify, you    │
+│  never answer the question.                                                 │
+│  tools: None                                                                │
+│  verbose: False                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── ✅ LiteAgent Completed ───────────────────────────┐
+│                                                                             │
+│  LiteAgent Completed                                                        │
+│  Role: Customer Question Triage Specialist                                  │
+│  id: 95a6825e-e0b5-497a-9f54-68f83a369165                                   │
+│  role: Customer Question Triage Specialist                                  │
+│  goal: Classify the customer's question into the correct support category   │
+│  backstory: You read customer support questions and decide which            │
+│  specialist team should handle them: products, delivery, payments, or       │
+│  other if it doesn't fit any of those categories. You only classify, you    │
+│  never answer the question.                                                 │
+│  tools: None                                                                │
+│  verbose: False                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: triage                                                             │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: route                                                              │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: route                                                              │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: handle_products                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+┌───────────────────────── 🚀 Crew Execution Started ─────────────────────────┐
+│                                                                             │
+│  Crew Execution Started                                                     │
+│  Name: ProductsCrew                                                         │
+│  ID: 5350f416-f0df-4452-8369-5e75a6a28458                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── 📋 Task Started ──────────────────────────────┐
+│                                                                             │
+│  Task Started                                                               │
+│  Name: answer_product_question                                              │
+│  ID: c3b1a0e1-fcb0-4529-bb30-6ff4092426bf                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────── 🤖 Agent Started ──────────────────────────────┐
+│                                                                             │
+│  Agent: Product Support Specialist                                          │
+│                                                                             │
+│  Task: A customer asked the following question: "Which mouse has the        │
+│  highest max DPI in your catalog?                                           │
+│                                                                             │
+│  Answer in English, in your own words — do not echo the raw data            │
+│  verbatim." If the question asks which products are in a specific order,    │
+│  use the order details provided in the conversation context to name them.   │
+│  Use the Product Knowledge Search tool to find any specs, compatibility,    │
+│  or usage details about a product.                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────── 🔧 Tool Execution Started (#2) ───────────────────────┐
+│                                                                             │
+│  Tool: product_knowledge_search                                             │
+│  Args: {'query': 'mouse max DPI'}                                           │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[32mTool product_knowledge_search executed with result: Source: mice.md
+Frequently Asked Questions — Mice
+- Q: Can I use the G502 X Plus wired instead of wireless?
+  A: Yes, it can be connected via USB cable for charging and zero-latency wired play, while
+...[0m
+┌───────────────────── ✅ Tool Execution Completed (#2) ──────────────────────┐
+│                                                                             │
+│  Tool Completed                                                             │
+│  Tool: product_knowledge_search                                             │
+│  Output: Source: mice.md                                                    │
+│  Frequently Asked Questions — Mice                                          │
+│  - Q: Can I use the G502 X Plus wired instead of wireless?                  │
+│    A: Yes, it can be connected via USB cable for charging and zero-latency  │
+│  wired play, while                                                          │
+│    still functioning as a regular wired mouse without the LIGHTSPEED        │
+│  receiver.                                                                  │
+│  - Q: Is the Redragon M711 suitable for competitive gaming?                 │
+│    A: It is a budget option and performs well for casual and                │
+│  semi-competitive play, but its                                             │
+│    sensor and polling rate are not on par with the DeathAdder V3 or G502 X  │
+│  Plus for                                                                   │
+│    high-level esports use.                                                  │
+│  - Q: Do these mice support on-the-fly DPI switching without software?      │
+│    A: Yes, all three have a physical DPI button that cycles through preset  │
+│  DPI stages stored                                                          │
+│    in onboard memory, even without the configuration software installed.    │
+│                                                                             │
+│  ---                                                                        │
+│                                                                             │
+│  Source: mice.md                                                            │
+│  Compatibility — Mice                                                       │
+│  - All three mice work as plug-and-play USB HID devices on Windows, macOS,  │
+│  and Linux.                                                                 │
+│  - Button remapping and DPI profiles require manufacturer software          │
+│  (Logitech G HUB or Razer                                                   │
+│    Synapse), available only for Windows and macOS. The Redragon M711 uses   │
+│  its own lightweight                                                        │
+│    configuration tool, Windows only.                                        │
+│  - The G502 X Plus is the only model in this list with wireless             │
+│  connectivity; the other two                                                │
+│    are wired only.                                                          │
+│                                                                             │
+│  ---                                                                        │
+│                                                                             │
+│  Source: model_comparisons.md                                               │
+│  Mice: G502 X Plus vs DeathAdder V3 vs M711 Cobra                           │
+│  The Logitech G502 X Plus is the only wireless option of the three and has  │
+│  the highest                                                                │
+│  button count (13 programmable buttons), making it best for users who want  │
+│  onboard macros                                                             │
+│  and freedom from a cable. The Razer DeathAdder V3 is the lightest (59g)    │
+│  and has the                                                                │
+│  highest max DPI (30,000), making it the strongest pick for competitive,    │
+│  fast-flick                                                                 │
+│  gameplay. The Redragon M711 Cobra is the most affordable, with decent      │
+│  specs for casual                                                           │
+│  play but a noticeably lower max DPI and fewer programmable buttons than    │
+│  the other two.                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[35m[Finalize] todos_count=0, todos_with_results=0[0m
+┌─────────────────────────── ✅ Agent Final Answer ───────────────────────────┐
+│                                                                             │
+│  Agent: Product Support Specialist                                          │
+│                                                                             │
+│  Final Answer:                                                              │
+│  {                                                                          │
+│    "answer": "The mouse with the highest maximum DPI in our catalog is the  │
+│  Razer DeathAdder V3, which reaches up to 30,000 DPI.",                     │
+│    "found_answer": true,                                                    │
+│    "source": "model_comparisons.md"                                         │
+│  }                                                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────── 📋 Task Completion ─────────────────────────────┐
+│                                                                             │
+│  Task Completed                                                             │
+│  Name: answer_product_question                                              │
+│  Agent: Product Support Specialist                                          │
+│                                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── Crew Completion ──────────────────────────────┐
+│                                                                             │
+│  Crew Execution Completed                                                   │
+│  Name: ProductsCrew                                                         │
+│  ID: 5350f416-f0df-4452-8369-5e75a6a28458                                   │
+│  Final Output: {                                                            │
+│    "answer": "The mouse with the highest maximum DPI in our catalog is the  │
+│  Razer DeathAdder V3, which reaches up to 30,000 DPI.",                     │
+│    "found_answer": true,                                                    │
+│    "source": "model_comparisons.md"                                         │
+│  }                                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: handle_products                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: check_escalation                                                   │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: check_escalation                                                   │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+
+┌────────────────────────────── Tracing Status ───────────────────────────────┐
+│                                                                             │
+│  Info: Tracing is disabled.                                                 │
+│                                                                             │
+│  To enable tracing, do any one of these:                                    │
+│  • Set tracing=True in your Crew/Flow code                                  │
+│  • Set CREWAI_TRACING_ENABLED=true in your project's .env file              │
+│  • Run: crewai traces enable                                                │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────── ✅ Flow Completion ─────────────────────────────┐
+│                                                                             │
+│  Flow Execution Completed                                                   │
+│  Name: SacFlow                                                              │
+│  ID: bf37f69e-3b80-436a-afd1-dc9489227b1b                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[answer 3/15] 'Can I use the Razer BlackShark V2 Pro headset on PlayStation 5?'
+┌───────────────────────────── 🌊 Flow Execution ─────────────────────────────┐
+│                                                                             │
+│  Starting Flow Execution                                                    │
+│  Name: SacFlow                                                              │
+│  ID: a11c8645-4bdf-44d6-be54-2685dcc12bb0                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── 🌊 Flow Started ──────────────────────────────┐
+│                                                                             │
+│  Flow Started                                                               │
+│  Name: SacFlow                                                              │
+│  ID: a11c8645-4bdf-44d6-be54-2685dcc12bb0                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: guardrail_check                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: guardrail_check                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: route_guardrail                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: route_guardrail                                                    │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: triage                                                             │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+
+┌─────────────────────────── 🤖 LiteAgent Started ────────────────────────────┐
+│                                                                             │
+│  LiteAgent Started                                                          │
+│  Role: Customer Question Triage Specialist                                  │
+│  Status: In Progress                                                        │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────── 🤖 LiteAgent Started ────────────────────────────┐
+│                                                                             │
+│  LiteAgent Session Started                                                  │
+│  Name: Customer Question Triage Specialist                                  │
+│  id: 44988dd9-9c70-472a-b41b-92de5045e55c                                   │
+│  role: Customer Question Triage Specialist                                  │
+│  goal: Classify the customer's question into the correct support category   │
+│  backstory: You read customer support questions and decide which            │
+│  specialist team should handle them: products, delivery, payments, or       │
+│  other if it doesn't fit any of those categories. You only classify, you    │
+│  never answer the question.                                                 │
+│  tools: None                                                                │
+│  verbose: False                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── ✅ LiteAgent Completed ───────────────────────────┐
+│                                                                             │
+│  LiteAgent Completed                                                        │
+│  Role: Customer Question Triage Specialist                                  │
+│  id: 44988dd9-9c70-472a-b41b-92de5045e55c                                   │
+│  role: Customer Question Triage Specialist                                  │
+│  goal: Classify the customer's question into the correct support category   │
+│  backstory: You read customer support questions and decide which            │
+│  specialist team should handle them: products, delivery, payments, or       │
+│  other if it doesn't fit any of those categories. You only classify, you    │
+│  never answer the question.                                                 │
+│  tools: None                                                                │
+│  verbose: False                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: triage                                                             │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: route                                                              │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────── ✅ Flow Method Completed ──────────────────────────┐
+│                                                                             │
+│  Method: route                                                              │
+│  Status: Completed                                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────── 🔄 Flow Method Running ───────────────────────────┐
+│                                                                             │
+│  Method: handle_products                                                    │
+│  Status: Running                                                            │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+
+
+┌───────────────────────── 🚀 Crew Execution Started ─────────────────────────┐
+│                                                                             │
+│  Crew Execution Started                                                     │
+│  Name: ProductsCrew                                                         │
+│  ID: 38741b6c-a995-47b3-8e37-a595d14ac230                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────── 📋 Task Started ──────────────────────────────┐
+│                                                                             │
+│  Task Started                                                               │
+│  Name: answer_product_question                                              │
+│  ID: 2d0021d4-7851-4653-b50b-dbf50738e965                                   │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────── 🤖 Agent Started ──────────────────────────────┐
+│                                                                             │
+│  Agent: Product Support Specialist                                          │
+│                                                                             │
+│  Task: A customer asked the following question: "Can I use the Razer        │
+│  BlackShark V2 Pro headset on PlayStation 5?                                │
+│                                                                             │
+│  Answer in English, in your own words — do not echo the raw data            │
+│  verbatim." If the question asks which products are in a specific order,    │
+│  use the order details provided in the conversation context to name them.   │
+│  Use the Product Knowledge Search tool to find any specs, compatibility,    │
+│  or usage details about a product.                                          │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────── 🔧 Tool Execution Started (#3) ───────────────────────┐
+│                                                                             │
+│  Tool: product_knowledge_search                                             │
+│  Args: {'query': 'Razer BlackShark V2 Pro PlayStation 5 compatibility'}     │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+[32mTool product_knowledge_search executed with result: Source: headsets.md
+Wireless Headset [Razer BlackShark V2 Pro]
+A premium wireless esports headset featuring exceptional microphone quality, immersive sound, and long battery life for gaming and profes...[0m
+┌───────────────────── ✅ Tool Execution Completed (#3) ──────────────────────┐
+│                                                                             │
+│  Tool Completed                                                             │
+│  Tool: product_knowledge_search                                             │
+│  Output: Source: headsets.md                                                │
+│  Wireless Headset [Razer BlackShark V2 Pro]                                 │
+│  A premium wireless esports headset featuring exceptional microphone        │
+│  quality, immersive sound, and long battery life for gaming and             │
+│  professional communication.                                                │
+│                                                                             │
+│  - Material: Steel-reinforced frame, memory foam ear cushions, synthetic    │
+│  leather                                                                    │
+│  - Driver size: 50 mm Razer TriForce drivers                                │
+│  - Surround sound: THX Spatial Audio                                        │
+│  - Microphone: Detachable, HyperClear cardioid                              │
+│  - Battery life: Up to 70 hours                                             │
+│  - Noise cancelling: Yes (passive noise isolation)                          │
+│  - Connectivity: Wireless (2.4 GHz)                                         │
+│  - Available colors: Black, White                                           │
+│  - Price: USD $199.99                                                       │
+│                                                                             │
+│  ---                                                                        │
+│                                                                             │
+│  Source: headsets.md                                                        │
+│  Compatibility — Headsets                                                   │
+│  - All three headsets work with PC (Windows/macOS) via their wired or       │
+│  wireless connection.                                                       │
+│  - The BlackShark V2 Pro's wireless dongle is PC-only; it does not pair     │
+│  via Bluetooth to phones.                                                   │
+│  - The HyperX Cloud II and Corsair HS65 work on PlayStation and Xbox        │
+│  consoles via the 3.5mm                                                     │
+│    connection, but surround sound (virtual 7.1 / Dolby Audio) only works    │
+│  through the USB                                                            │
+│    connection on PC.                                                        │
+│                                                                             │
+│  ---                                                                        │
+│                                                                             │
+│  Source: headsets.md                                                        │
+│  Frequently Asked Questions — Headsets                                      │
+│  - Q: Does the BlackShark V2 Pro work on PlayStation 5?                     │
+│    A: It works via the 3.5mm cable included in the box for basic audio,     │
+│  but the wireless                                                           │
+│    2.4 GHz dongle and THX Spatial Audio are PC-only features.               │
+│  - Q: Which of these has the best microphone for streaming?                 │
+│    A: The BlackShark V2 Pro's HyperClear cardioid microphone is the most    │
+│  directional and                                                            │
+│    rejects background noise the best, making it the strongest pick for      │
+│  streaming or                                                               │
+│    professional calls among the three.                                      │
+│  - Q: Can I replace the ear cushions?                                       │
+│    A: Replacement ear cushions are officially sold for the BlackShark V2    │
+│  Pro and HyperX Cloud                                                       │
+│    II. The Corsair HS65 does not have officially sold replacement cushions  │
+│  at this time.                                                              │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+

@@ -11,7 +11,7 @@ import re
 
 import requests
 
-BASE_URL = os.environ.get("MOCK_STORE_URL", "http://localhost:8000/mock")
+BASE_URL = os.environ.get("STORE_URL", "http://localhost:8000/store")
 TIMEOUT = 10
 
 _ORDER_ID_PATTERN = re.compile(r"\b\d{4,6}\b")
