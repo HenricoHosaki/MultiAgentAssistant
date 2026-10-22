@@ -1,11 +1,3 @@
-"""Seed data for the mock store service.
-
-Products mirror the names and prices in the Products knowledge base (knowledge/products/*.md)
-so the order integration stays coherent with what the RAG agent knows about. Orders reference
-products by id; the router resolves them into a rich order (item names, totals, payment,
-address, dates, status) — the shape a real order/CRM API would return.
-"""
-
 PRODUCTS = {
     1: {"id": 1, "title": "Razer BlackWidow V4 X", "price": 169.99, "category": "keyboards"},
     2: {"id": 2, "title": "Redragon Kumara K552", "price": 39.99, "category": "keyboards"},

@@ -1,11 +1,3 @@
-"""Order service client + helpers.
-
-Orders are a cross-cutting entity: a customer can ask about an order from a delivery,
-payment, or product angle. Instead of giving every specialist an order-lookup tool, the
-Flow calls this service once (when the question mentions an order number) and injects the
-result as shared context — the same cross-cutting pattern used for the guardrail.
-"""
-
 import os
 import re
 
@@ -14,13 +6,9 @@ import requests
 BASE_URL = os.environ.get("STORE_URL", "http://localhost:8000/store")
 TIMEOUT = 10
 
-# Excludes digits touching "/" or "-" so a year inside a date (e.g. "02/07/2026" or
-# "2026-07-02") is never mistaken for an order number.
 _ORDER_ID_PATTERN = re.compile(r"(?<![\d/-])\b\d{4,6}\b(?![\d/-])")
 
-
 def extract_order_id(text: str) -> str | None:
-    """Return the first 4-6 digit number in the text, treated as a candidate order id."""
     match = _ORDER_ID_PATTERN.search(text)
     return match.group(0) if match else None
 
